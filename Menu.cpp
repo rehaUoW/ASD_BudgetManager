@@ -13,6 +13,7 @@ void Menu::EnterTrasactionWizard()
 
 void Menu::ViewTransactionsWizard()
 {
+	dasfasdfdd
 }
 
 void Menu::EditTransaction()
