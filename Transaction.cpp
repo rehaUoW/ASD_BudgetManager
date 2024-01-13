@@ -5,88 +5,150 @@
 #include <assert.h>
 
 #include "Transaction.h"
+#include "RecurringType.h"
+#include "CommonFunctions.h"
 
 
-Transaction::Transaction(TransactionType transactionType_, Date date_, double amount_, Category* category_)
+Transaction::Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_)
 {
+	transactionID = 1;
+	transactionType = transactionType_;
+	date = date_;
+	amount = amount_;
+	note = "";
+	recurring = RecurringType::none;
+	category = category_;
 }
 
 void Transaction::AddNote(std::string note_)
 {
+	note = note_;
+}
+
+void Transaction::AppendNote(std::string note_)
+{
+	note += note_;
 }
 
 void Transaction::AddRecurring(RecurringType recurring_)
 {
+	recurring = recurring_;
 }
 
-void Transaction::AddRecurranceEndDate(int* endDate)
+void Transaction::AddRecurranceEndDate(tm endDate)
 {
+	recurranceEndDate = endDate;
 }
 
 void Transaction::PrintTransaction()
 {
+	CommonFunctions::PrintDateTime(date);
+	std::cout << std::endl;
+	std::cout<<"Transaction Type: ";
+	switch (transactionType)
+	{
+	case 0:
+		std::cout << "Income";
+		break;
+	case 1:
+		std::cout << "Expense";
+		break;	
+	default:
+		break;
+	}
+	std::cout << std::endl;
+	std::cout<<"Amount: " << amount << std::endl;
+	if (note != "")
+	{
+		std::cout << note << std::endl;
+	}
+	if (recurring != 0) {
+		std::cout << "Repeats ";
+		switch (recurring)
+		{
+		case 1:
+			std::cout << "annually ";
+			break;
+		case 2:
+			std::cout << "monthly ";
+			break;	
+		case 3:
+			std::cout << "weekly ";
+			break;	
+		case 4:
+			std::cout << "daily ";
+			break;	
+		default:
+			break;
+		}
+		std::cout << "till ";
+		CommonFunctions::PrintDateTime(recurranceEndDate);
+		std::cout << std::endl;
+	}	
 }
 
-void Transaction::SetTransactionID(int newTransactionID_)
+void Transaction::IncrementTransactionID()
 {
+	transactionID++;
 }
 
 void Transaction::SetTransactionType(TransactionType newTransactionType)
 {
+	transactionType=newTransactionType;
 }
 
-void Transaction::SetDate(Date newDate_)
+void Transaction::SetDate(tm newDate_)
 {
+	date=newDate_;
 }
 
 void Transaction::SetAmount(double newAmount)
 {
+	amount = newAmount;
 }
 
 void Transaction::SetCategory(Category* newCategory)
 {
+	category = newCategory;
 }
 
-void Transaction::SetNote(std::string newNote)
-{
-}
 
 int Transaction::GetTransactionID()
 {
-	return 0;
+	return transactionID;
 }
 
 TransactionType Transaction::GetTransactionType()
 {
-	return 0;
+	return transactionType;
 }
 
-Date Transaction::GetDate()
+tm Transaction::GetDate()
 {
-	return 0;
+	return date;
 }
 
 double Transaction::GetAmount()
 {
-	return 0;
+	return amount;
 }
 
-string Transaction::GetNote()
+std::string Transaction::GetNote()
 {
-	return 0;
+	return note;
 }
 
 RecurringType Transaction::GetRecurring()
 {
-	return 0;
+	return recurring;
 }
 
-Date Transaction::GetRecurranceEndDate()
+tm Transaction::GetRecurranceEndDate()
 {
-	return 0;
+	return recurranceEndDate;
 }
 
 Category* Transaction::GetCategory()
 {
-	return 0;
+	return category;
 }

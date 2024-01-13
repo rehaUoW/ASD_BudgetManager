@@ -2,16 +2,14 @@
 #define TRANSACTION_H
 
 #include <string>
-#include <vector>
-#include <list>
 #include <iostream>
-#include <assert.h>
+#include <ctime>
 
 #include "TransactionType.h"
-#include "Date.h"
-#include "std::string.h"
 #include "RecurringType.h"
 #include "Category.h"
+
+
 
 class Transaction
 {
@@ -20,7 +18,7 @@ private:
 
 	TransactionType transactionType;
 
-	Date date;
+	tm date;
 
 	double amount;
 
@@ -28,26 +26,28 @@ private:
 
 	RecurringType recurring;
 
-	Date recurranceEndDate;
+	tm recurranceEndDate;
 
 	Category* category;
 
 public:
-	Transaction(TransactionType transactionType_, Date date_, double amount_, Category* category_);
+	Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_);
 
 	void AddNote(std::string note_);
 
+	void AppendNote(std::string note_);
+
 	void AddRecurring(RecurringType recurring_);
 
-	void AddRecurranceEndDate(int* endDate);
+	void AddRecurranceEndDate(tm endDate);
 
 	void PrintTransaction();
 
-	void SetTransactionID(int newTransactionID_);
-
+	void IncrementTransactionID();
+	
 	void SetTransactionType(TransactionType newTransactionType);
 
-	void SetDate(Date newDate_);
+	void SetDate(tm newDate_);
 
 	void SetAmount(double newAmount);
 
@@ -59,15 +59,15 @@ public:
 
 	TransactionType GetTransactionType();
 
-	Date GetDate();
+	tm GetDate();
 
 	double GetAmount();
 
-	string GetNote();
+	std::string GetNote();
 
 	RecurringType GetRecurring();
 
-	Date GetRecurranceEndDate();
+	tm GetRecurranceEndDate();
 
 	Category* GetCategory();
 

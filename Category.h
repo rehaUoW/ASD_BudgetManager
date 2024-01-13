@@ -9,14 +9,13 @@
 
 #include "TransactionType.h"
 #include "Transaction.h"
-#include "std::string.h"
 
 class Category
 {
 private:
 	TransactionType transactionType;
 
-	string name :std:;
+	std::string name;
 
 	double budget;
 
