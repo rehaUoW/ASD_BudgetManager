@@ -1,15 +1,11 @@
 #ifndef TRANSACTION_LOG_H
 #define TRANSACTION_LOG_H
 
-#include <string>
-#include <vector>
 #include <list>
-#include <iostream>
-#include <assert.h>
+#include <ctime>
 
 #include "Transaction.h"
-#include "stdListOfPointersToTransactionObjects.h"
-#include "Date.h"
+
 
 /**
  * Singleton class for the log of transactions (contains a std::list of pointers to objects of the Transaction class)
@@ -21,7 +17,7 @@ private:
 
 	static int numberOfTransactions;
 
-	Transaction* transactionList[];
+	std::list<Transaction*> transactionList; //front of list is the most recent
 
 private:
 	TransactionLog();
@@ -31,15 +27,19 @@ private:
 public:
 	static TransactionLog* GetTransactionLog();
 
-	static stdListOfPointersToTransactionObjects GetListOfTransactions();
+	std::list<Transaction*> GetListOfTransactions();
 
-	static void AddTransaction(Transaction* newTransaction);
+	static int GetNumberOfTransactions();
 
-	static void DeleteTransaction(Transaction* transaction);
+	void AddTransaction(Transaction& newTransaction);
 
-	static Transaction*[] RetrieveTransactions(int start, int end);
+	void DeleteTransaction(Transaction& transaction);
 
-	static Transaction*[] RetrieveTransactions(Date start, Date end);
+	Transaction** RetrieveTransactions(int start, int end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
+	//usage: arguments 1 & 5 means the first thru fifth item in the list (inclusive) will be returned
+
+	Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 
 };
+
 #endif
