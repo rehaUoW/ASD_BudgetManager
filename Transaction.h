@@ -39,9 +39,7 @@ public:
 
 	void AddRecurring(RecurringType recurring_);
 
-	void AddRecurranceEndDate(tm endDate);
-
-	void PrintTransaction();
+	void AddRecurranceEndDate(tm endDate);	
 
 	void IncrementTransactionID();
 	
@@ -53,7 +51,7 @@ public:
 
 	void SetCategory(Category* newCategory);
 
-	void SetNote(std::string newNote);
+	void PrintTransaction();
 
 	int GetTransactionID();
 
@@ -70,6 +68,10 @@ public:
 	tm GetRecurranceEndDate();
 
 	Category* GetCategory();
+
+	bool IsTransactionOlder(Transaction& anotherTransaction); //predicate for use in TransactionLog when adding Transactions to the list chronologically
+
+	bool IsTransactionOlder(tm& time);
 
 };
 #endif

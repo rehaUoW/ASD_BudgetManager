@@ -1,8 +1,3 @@
-#include <string>
-#include <vector>
-#include <list>
-#include <iostream>
-#include <assert.h>
 
 #include "Transaction.h"
 #include "RecurringType.h"
@@ -38,6 +33,31 @@ void Transaction::AddRecurring(RecurringType recurring_)
 void Transaction::AddRecurranceEndDate(tm endDate)
 {
 	recurranceEndDate = endDate;
+}
+
+void Transaction::IncrementTransactionID()
+{
+	transactionID++;
+}
+
+void Transaction::SetTransactionType(TransactionType newTransactionType)
+{
+	transactionType=newTransactionType;
+}
+
+void Transaction::SetDate(tm newDate_)
+{
+	date=newDate_;
+}
+
+void Transaction::SetAmount(double newAmount)
+{
+	amount = newAmount;
+}
+
+void Transaction::SetCategory(Category* newCategory)
+{
+	category = newCategory;
 }
 
 void Transaction::PrintTransaction()
@@ -87,32 +107,6 @@ void Transaction::PrintTransaction()
 	}	
 }
 
-void Transaction::IncrementTransactionID()
-{
-	transactionID++;
-}
-
-void Transaction::SetTransactionType(TransactionType newTransactionType)
-{
-	transactionType=newTransactionType;
-}
-
-void Transaction::SetDate(tm newDate_)
-{
-	date=newDate_;
-}
-
-void Transaction::SetAmount(double newAmount)
-{
-	amount = newAmount;
-}
-
-void Transaction::SetCategory(Category* newCategory)
-{
-	category = newCategory;
-}
-
-
 int Transaction::GetTransactionID()
 {
 	return transactionID;
@@ -151,4 +145,12 @@ tm Transaction::GetRecurranceEndDate()
 Category* Transaction::GetCategory()
 {
 	return category;
+}
+
+bool Transaction::IsTransactionOlder(Transaction& anotherTransaction){
+	return mktime(&date) < mktime(&anotherTransaction.GetDate());
+}//predicate for use in TransactionLog when adding Transactions to the list chronologically
+
+bool Transaction::IsTransactionOlder(tm& time){
+	return mktime(&date) < mktime(&time);
 }
