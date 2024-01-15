@@ -8,7 +8,7 @@
 #include <assert.h>
 
 #include "TransactionType.h"
-#include "Transaction.h"
+// #include "Transaction.h"
 
 class Category
 {
@@ -18,8 +18,6 @@ private:
 	std::string name;
 
 	double budget;
-
-	Transaction transaction[];
 
 public:
 	Category(TransactionType transactionType_, std::string name_);

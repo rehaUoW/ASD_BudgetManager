@@ -5,9 +5,7 @@
 #include <vector>
 #include <list>
 #include <iostream>
-#include <assert.h>
-
-#include "std::string.h"
+#include "Category.h"
 
 class Menu
 {
@@ -22,7 +20,7 @@ public:
 
 	void ViewCategories();
 
-	void AddNewCategory(std::string newCategory);
+	void AddNewCategory(Category newCategory);
 
 	void EnterBudgetWizard();
 

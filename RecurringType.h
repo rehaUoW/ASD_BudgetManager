@@ -1,4 +1,9 @@
+#ifndef RECURRING_TYPE_H
+#define RECURRING_TYPE_H
+
 enum RecurringType { none, annual, monthly, weekly, daily };
+
+#endif
 
 /*
 switch (recurring)

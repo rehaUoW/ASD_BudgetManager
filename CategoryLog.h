@@ -8,7 +8,7 @@
 #include <assert.h>
 
 #include "Category.h"
-#include "stdListOfPointersToCategoryObjects.h"
+// #include "stdListOfPointersToCategoryObjects.h"
 
 /**
  * Singleton class for the log of categories (contains a std::list of pointers to objects of the Category class)
@@ -30,7 +30,7 @@ private:
 public:
 	static CategoryLog* GetCategoryLog();
 
-	static stdListOfPointersToCategoryObjects GetListOfCategories();
+	// static stdListOfPointersToCategoryObjects GetListOfCategories();
 
 	static void AddCategory(Category* newCategory);
 

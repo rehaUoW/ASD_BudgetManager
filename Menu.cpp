@@ -7,13 +7,14 @@
 #include "Menu.h"
 
 
+
 void Menu::EnterTrasactionWizard()
 {
 }
 
 void Menu::ViewTransactionsWizard()
 {
-	dasfasdfdd
+	
 }
 
 void Menu::EditTransaction()
@@ -28,7 +29,7 @@ void Menu::ViewCategories()
 {
 }
 
-void Menu::AddNewCategory(std::string newCategory)
+void Menu::AddNewCategory(Category newCategory)
 {
 }
 
