@@ -105,3 +105,17 @@ Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 
 	return retrievedTransactions;
 }
+
+Transaction* TransactionLog::FindTransactionByID(int transactionID)
+{
+    for (const auto& transaction : transactionList)
+    {
+        if (transaction->GetTransactionID() == transactionID)
+        {
+            return transaction;
+        }
+    }
+    
+    // If no transaction is found with the given ID
+    return nullptr;
+}

@@ -1,7 +1,7 @@
 
 #include "Transaction.h"
-#include "RecurringType.h"
-#include "CommonFunctions.h"
+// #include "RecurringType.h"
+// #include "CommonFunctions.h"
 
 
 Transaction::Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_)
@@ -147,10 +147,11 @@ Category* Transaction::GetCategory()
 	return category;
 }
 
-bool Transaction::IsTransactionOlder(Transaction& anotherTransaction){
-	return mktime(&date) < mktime(&anotherTransaction.GetDate());
-}//predicate for use in TransactionLog when adding Transactions to the list chronologically
+bool Transaction::IsTransactionOlder(Transaction& anotherTransaction) {
+    tm anotherDate = anotherTransaction.GetDate();
+    return mktime(&date) < mktime(&anotherDate);
+}
 
-bool Transaction::IsTransactionOlder(tm& time){
-	return mktime(&date) < mktime(&time);
+bool Transaction::IsTransactionOlder(tm& time) {
+    return mktime(&date) < mktime(&time);
 }

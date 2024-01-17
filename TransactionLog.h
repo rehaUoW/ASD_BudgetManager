@@ -40,6 +40,8 @@ public:
 
 	Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 
+	Transaction* FindTransactionByID(int transactionID); //Vishwa 
+
 };
 
 #endif
