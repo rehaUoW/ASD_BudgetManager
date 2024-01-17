@@ -33,7 +33,7 @@ public:
 
 	void AddTransaction(Transaction& newTransaction);
 
-	void DeleteTransaction(Transaction& transaction);
+	void DeleteTransaction(Transaction* transaction);
 
 	Transaction** RetrieveTransactions(int start, int end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 	//usage: arguments 1 & 5 means the first thru fifth item in the list (inclusive) will be returned
@@ -41,7 +41,6 @@ public:
 	Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 
 	Transaction* FindTransactionByID(int transactionID); //Vishwa 
-
 };
 
 #endif

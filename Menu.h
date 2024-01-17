@@ -18,14 +18,13 @@
 class Menu
 {
 private:
-    TransactionLog transactionLog;
+    //TransactionLog transactionLog;
 
-    Category* ChooseCategory(std::list<Category*>& categories);
+    //Category* ChooseCategory(std::list<Category*>& categories);
 
 
 public:
-	Menu();
-
+	
 	void EnterTrasactionWizard();
 
 	void ViewTransactionsWizard();
@@ -35,7 +34,7 @@ public:
     void viewCustomDateRange(TransactionLog* transactionLog);
     void displayTransactions(Transaction** transactions);
 
-	void Menu::displayTransactionsList(const std::list<Transaction*>& transactions);
+	void displayTransactionsList(const std::list<Transaction*>& transactions);
 	void EditTransaction();
 
 	void DeleteTransaction();
@@ -47,6 +46,8 @@ public:
 	void EnterBudgetWizard();
 
 	void PrintBudgetStatus();
+
+	Category* ChooseCategory(std::list<Category*>& categories);
 
 };
 #endif

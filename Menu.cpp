@@ -2,7 +2,7 @@ using namespace std;
 
 #include "Menu.h"
 
-Category* Menu::ChooseCategory(list<Category*>& categories)
+Category* Menu::ChooseCategory(std::list<Category*>& categories)
 {
     int choice;
 

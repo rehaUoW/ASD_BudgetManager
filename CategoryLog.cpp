@@ -4,11 +4,10 @@
 #include "CategoryLog.h"
 
 CategoryLog* CategoryLog::instance = nullptr;
-// int CategoryLog::numberOfCategories;
+int CategoryLog::numberOfCategories = 0;
 
 CategoryLog::CategoryLog()
 {
-	numberOfCategories = 0;
 }
 
 
@@ -29,15 +28,15 @@ std::list<Category*> CategoryLog::GetListOfCategories()
 
 void CategoryLog::AddCategory(Category* newCategory)
 {
-	instance->categoryList.push_back(newCategory);
-    instance->numberOfCategories++;
+	categoryList.push_back(newCategory);
+    numberOfCategories++;
 }
 
 void CategoryLog::DeleteCategory(Category* category)
 {
 	instance->categoryList.remove(category);
     delete category;
-    instance->numberOfCategories--;
+    numberOfCategories--;
 }
 
 // impletementation of the constrcutor 

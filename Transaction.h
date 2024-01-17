@@ -69,9 +69,9 @@ public:
 
 	Category* GetCategory();
 
-	bool IsTransactionOlder(Transaction& anotherTransaction); //predicate for use in TransactionLog when adding Transactions to the list chronologically
+	bool IsTransactionOlderThan(Transaction& anotherTransaction); //predicate for use in TransactionLog when adding Transactions to the list chronologically
 
-	bool IsTransactionOlder(tm& time);
+	bool IsTransactionOlderThan(tm& time);
 
 };
 #endif

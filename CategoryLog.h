@@ -30,9 +30,9 @@ public:
 
 	std::list<Category*> GetListOfCategories();
 
-	static void AddCategory(Category* newCategory);
+	void AddCategory(Category* newCategory);
 
-	static void DeleteCategory(Category* category);
+	void DeleteCategory(Category* category);
 
 	/*
 	 // Explicitly deleted copy constructor and copy assignment to enforce Singleton pattern

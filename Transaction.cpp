@@ -146,10 +146,11 @@ Category* Transaction::GetCategory()
 	return category;
 }
 
-bool Transaction::IsTransactionOlder(Transaction& anotherTransaction){
-	return mktime(&date) < mktime(&anotherTransaction.GetDate());
-}//predicate for use in TransactionLog when adding Transactions to the list chronologically
+bool Transaction::IsTransactionOlderThan(Transaction& anotherTransaction){
+	tm anotherDate = anotherTransaction.GetDate();
+	return mktime(&date) < mktime(&anotherDate);
+}//for use in TransactionLog when adding Transactions to the list chronologically
 
-bool Transaction::IsTransactionOlder(tm& time){
+bool Transaction::IsTransactionOlderThan(tm& time){
     return mktime(&date) < mktime(&time);
 }

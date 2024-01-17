@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "TransactionLog.h"
 #include "Transaction.h"
 
@@ -36,17 +38,21 @@ int TransactionLog::GetNumberOfTransactions(){
 void TransactionLog::AddTransaction(Transaction& newTransaction)
 {
 	//log must be kept in chronological order
-	std::list<Transaction*>::iterator iter = std::find(transactionList.begin(), transactionList.end(), (*iter)->IsTransactionOlder(newTransaction));
+	std::list<Transaction*>::iterator iter = transactionList.begin();
+	for (iter; iter!=transactionList.end(); iter++){
+		if ( (*iter)->IsTransactionOlderThan(newTransaction) ) { break; }
+	}
 	transactionList.insert(iter,&newTransaction);
 	numberOfTransactions++;
 }
 
-void TransactionLog::DeleteTransaction(Transaction& transaction)
+void TransactionLog::DeleteTransaction(Transaction* transaction)
 {
 	std::list<Transaction*>::iterator iter = std::find(transactionList.begin(), transactionList.end(), transaction);
-	if (&transaction == *iter){
+	if (transaction == *iter){
 		transactionList.remove(*iter);
 		numberOfTransactions--;
+		delete transaction;
 	}//if the iter is indeed pointing to the transaction we are looking for and has not simply reached the back of the list
 	//could have just used std::list remove_if?
 }
@@ -55,7 +61,7 @@ Transaction** TransactionLog::RetrieveTransactions(int start, int end)
 {
 	if ( (start > numberOfTransactions) || (start > end) || (start <= 0) ){
 		std::cout << "invalid start/end index" << std::endl;
-		return;
+		return nullptr;
 	}//basic input parameter validation
 	if (end > numberOfTransactions){
 		end = numberOfTransactions;
@@ -83,16 +89,27 @@ Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 {
 	if ( (mktime(&start) == -1) || (mktime(&end) == -1) ) {
 		std::cout << "invalid tm objects" << std::endl;
-		return;
+		return nullptr;
 	}
 	if ( (mktime(&start) == -1) < (mktime(&end) == -1) ) {
 		std::cout << "start is older than end" << std::endl;
-		return;
+		return nullptr;
 	}
 
-	std::list<Transaction*>::iterator iterStart = std::find(transactionList.begin(), transactionList.end(), (*iterStart)->IsTransactionOlder(start));
-	std::list<Transaction*>::iterator iterEnd = std::find(transactionList.begin(), transactionList.end(), (*iterEnd)->IsTransactionOlder(end));
+	std::list<Transaction*>::iterator iterStart = transactionList.begin();
+	
+
+	for (iterStart; iterStart!=transactionList.end(); iterStart++){
+		if ( (*iterStart)->IsTransactionOlderThan(start) ) { break; }
+	}
+
+	std::list<Transaction*>::iterator iterEnd = iterStart;
 	std::list<Transaction*>::iterator iter = iterStart;
+
+	for (iterEnd; iterEnd!=transactionList.end(); iterEnd++){
+		if ( (*iterEnd)->IsTransactionOlderThan(end) ) { break; }
+	}
+
 
 	Transaction** retrievedTransactions = new Transaction*[std::distance(iterEnd,iterStart)];
 	int i = 0;
@@ -104,6 +121,7 @@ Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 	}
 
 	return retrievedTransactions;
+	//this would have been much shorter if we returned a list or something but for now sticking with the decision to return a static array
 }
 
 Transaction* TransactionLog::FindTransactionByID(int transactionID)
@@ -119,3 +137,4 @@ Transaction* TransactionLog::FindTransactionByID(int transactionID)
     // If no transaction is found with the given ID
     return nullptr;
 }
+
