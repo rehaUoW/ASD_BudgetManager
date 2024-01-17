@@ -9,8 +9,7 @@
 Category::Category(TransactionType transactionType_, std::string name_)
 {
 	transactionType = transactionType_;
-	name = name_;
-	
+	name = name_;	
 }
 
 

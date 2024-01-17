@@ -1,6 +1,5 @@
 #include <string>
 #include <list>
-#include <iostream>
 
 #include "CategoryLog.h"
 
@@ -20,7 +19,6 @@ CategoryLog* CategoryLog::GetCategoryLog()
         instance = new CategoryLog();
     }
     return instance;
-
 }
 
 
