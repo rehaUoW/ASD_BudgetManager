@@ -1,30 +1,38 @@
 #include <string>
-#include <vector>
 #include <list>
 #include <iostream>
-#include <assert.h>
+
 
 #include "Category.h"
 
-
+// Constructor for the Catogary Class 
 Category::Category(TransactionType transactionType_, std::string name_)
 {
+	transactionType = transactionType_;
+	name = name_;
+	
 }
 
+
+// Getters 
 std::string Category::GetName()
 {
-	return 0;
+	return name;
 }
 
 double Category::GetBudget()
 {
-	return 0;
+	return budget;
 }
+
+// Setters 
 
 void Category::SetName(std::string newName)
 {
+	name = newName;
 }
 
 void Category::SetBudget(double value)
 {
+	budget = value;
 }

@@ -1,9 +1,11 @@
 #include <iostream>
 #include "Menu.h"
 #include "Category.h"
+#include "TransactionType.h"
+// #include "CommonFunctions.h"
 
 int main()
-{
+{ 
     Menu menu;
 
     int choice;
@@ -42,7 +44,6 @@ int main()
             break;
         case 6:
             {
-                /*
                 TransactionType transactionType_;
                 std::string name_;
 
@@ -63,7 +64,6 @@ int main()
 
                 // Add the new category to the menu
                 menu.AddNewCategory(newCategory);
-                */
 
             }
             break;

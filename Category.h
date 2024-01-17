@@ -2,13 +2,14 @@
 #define CATEGORY_H
 
 #include <string>
-#include <vector>
 #include <list>
 #include <iostream>
-#include <assert.h>
+
 
 #include "TransactionType.h"
 // #include "Transaction.h"
+// #include "CategoryLog.h"
+// #include "std::string.h"
 
 class Category
 {
@@ -19,7 +20,12 @@ private:
 
 	double budget;
 
+	// std::list<Transaction> transactions;
+	// Transaction transaction;
+	// CategoryLog categoryLog;
+
 public:
+	// constructor for the category 
 	Category(TransactionType transactionType_, std::string name_);
 
 	std::string GetName();
