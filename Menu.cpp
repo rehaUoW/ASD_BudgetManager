@@ -308,18 +308,102 @@ void Menu::EditTransaction()
 
 void Menu::DeleteTransaction()
 {
+    TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
+
+    // Display transactions for user to choose from
+    cout << "Choose a transaction to delete:\n";
+
+    // Display transactions
+    displayTransactionsList(transactionLog->GetListOfTransactions());
+
+    int transactionID;
+    cout << "Enter the transaction ID to delete: ";
+    cin >> transactionID;
+
+    // Retrieve the transaction to delete
+    Transaction* transactionToDelete = transactionLog->FindTransactionByID(transactionID);
+
+    if (transactionToDelete == nullptr)
+    {
+        cout << "Transaction not found.\n";
+        return;
+    }
+
+    // Confirm deletion
+    char confirm;
+    cout << "Are you sure you want to delete this transaction? (y/n): ";
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y')
+    {
+        // Delete the transaction
+        bool success = transactionLog->DeleteTransaction(transactionID);
+
+        if (success)
+        {
+            cout << "Transaction deleted successfully.\n";
+        }
+        else
+        {
+            cout << "Failed to delete transaction.\n";
+        }
+    }
+    else
+    {
+        cout << "Transaction deletion cancelled.\n";
+    }
 }
+
 
 void Menu::ViewCategories()
 {
+    if (categories.empty()) {
+        std::cout << "No categories available.\n";
+        return;
+    }
+
+    std::cout << "Available Categories:\n";
+    for (const Category& category : categories) {
+        std::cout << "Name: " << category.GetName() << ", Budget: " << category.GetBudget() << "\n";
+    }
+
 }
 
 void Menu::AddNewCategory(Category newCategory)
 {
+    std::string name;
+    int typeInput;
+    TransactionType type;
+
+    std::cout << "Enter the name of the new category: ";
+    getline(std::cin, name);
+
+    std::cout << "Select the transaction type (0 for EXPENSE, 1 for INCOME, ...): ";
+    std::cin >> typeInput;
+
+    // Simple validation and conversion to TransactionType
+    if (typeInput == 0) {
+        type = TransactionType::expense;
+    }
+    else if (typeInput == 1) {
+        type = TransactionType::income;
+    }
+    else {
+        std::cout << "Invalid transaction type selected. Aborting operation.\n";
+        return;
+    }
+
+    // Clear the newline character left in the buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    Category newCategory(type, name);
+    categories.push_back(newCategory);
+    std::cout << "New category '" << name << "' added successfully.\n";
 }
 
 void Menu::EnterBudgetWizard()
 {
+
 }
 
 void Menu::PrintBudgetStatus()
