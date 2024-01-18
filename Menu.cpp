@@ -306,8 +306,10 @@ void Menu::EditTransaction()
     cout << "Transaction edited successfully!\n";
 }
 
+
 void Menu::DeleteTransaction()
 {
+    /*
     TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
 
     // Display transactions for user to choose from
@@ -352,11 +354,13 @@ void Menu::DeleteTransaction()
     {
         cout << "Transaction deletion cancelled.\n";
     }
+    */
 }
 
 
 void Menu::ViewCategories()
 {
+    /*
     if (categories.empty()) {
         std::cout << "No categories available.\n";
         return;
@@ -366,11 +370,12 @@ void Menu::ViewCategories()
     for (const Category& category : categories) {
         std::cout << "Name: " << category.GetName() << ", Budget: " << category.GetBudget() << "\n";
     }
-
+    */
 }
 
 void Menu::AddNewCategory(Category newCategory)
 {
+    /*
     std::string name;
     int typeInput;
     TransactionType type;
@@ -399,6 +404,7 @@ void Menu::AddNewCategory(Category newCategory)
     Category newCategory(type, name);
     categories.push_back(newCategory);
     std::cout << "New category '" << name << "' added successfully.\n";
+    */
 }
 
 void Menu::EnterBudgetWizard()

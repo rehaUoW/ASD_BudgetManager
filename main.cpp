@@ -10,6 +10,18 @@ int main()
 
     int choice;
 
+    //Reha area
+    
+
+    //Vishwa area
+
+    //Ninujan area
+
+    //Ruvin area
+
+
+
+
     do
     {
         std::cout << "\nMenu Options:\n";
@@ -83,6 +95,16 @@ int main()
         }
 
     } while (choice != 0);
+
+
+
+    //Reha area
+
+    //Vishwa area
+
+    //Ninujan area
+
+    //Ruvin area
 
     return 0;
 }
