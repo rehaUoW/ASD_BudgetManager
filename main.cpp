@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "Category.h"
 #include "TransactionType.h"
+#include "CategoryLog.h"
 // #include "CommonFunctions.h"
 
 int main()
@@ -56,29 +57,7 @@ int main()
             menu.ViewCategories();
             break;
         case 6:
-            {
-                TransactionType transactionType_;
-                std::string name_;
-
-                // Get the name of the Category
-                std::cout << "Enter the name of the Category: ";
-                std::getline(std::cin, name_);
-
-                // Get the TransactionType as an integer
-                int transactionTypeInt;
-                std::cout << "Enter the TransactionType (0 for income, 1 for expense): ";
-                std::cin >> transactionTypeInt;
-
-                // Cast the integer to TransactionType
-                transactionType_ = static_cast<TransactionType>(transactionTypeInt);
-
-                // Create a new Category
-                Category newCategory = Category(transactionType_, name_);
-
-                // Add the new category to the menu
-                menu.AddNewCategory(newCategory);
-
-            }
+            menu.AddNewCategory();
             break;
         case 7:
             menu.EnterBudgetWizard();

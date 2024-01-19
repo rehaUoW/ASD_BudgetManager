@@ -24,6 +24,13 @@ double Category::GetBudget()
 	return budget;
 }
 
+TransactionType Category::GetTransactionType() {
+	return transactionType;
+}
+
+
+
+
 // Setters 
 
 void Category::SetName(std::string newName)

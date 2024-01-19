@@ -41,7 +41,7 @@ public:
 
 	void ViewCategories();
 
-	void AddNewCategory(Category newCategory);
+	void AddNewCategory();
 
 	void EnterBudgetWizard();
 

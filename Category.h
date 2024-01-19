@@ -5,7 +5,6 @@
 
 #include "TransactionType.h"
 
-
 class Category
 {
 private:
@@ -27,6 +26,7 @@ public:
 	void SetName(std::string newName);
 
 	void SetBudget(double value);
+	TransactionType GetTransactionType();
 
 };
 #endif
