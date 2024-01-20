@@ -57,33 +57,34 @@ void TransactionLog::DeleteTransaction(Transaction* transaction)
 	//could have just used std::list remove_if?
 }
 
-Transaction** TransactionLog::RetrieveTransactions(int start, int end)
+std::list<Transaction*> TransactionLog::RetrieveTransactions(int start, int end)
 {
-	if ( (start > numberOfTransactions) || (start > end) || (start <= 0) ){
-		std::cout << "invalid start/end index" << std::endl;
-		return nullptr;
-	}//basic input parameter validation
-	if (end > numberOfTransactions){
-		end = numberOfTransactions;
-	}//cap to end of list
+    std::list<Transaction*> retrievedTransactions;
 
-	std::list<Transaction*>::iterator iterStart = transactionList.begin();
-	std::advance(iterStart,start - 1);
-	std::list<Transaction*>::iterator iter = iterStart;
-	std::list<Transaction*>::iterator iterEnd = transactionList.begin();
-	std::advance(iterEnd,end - 1);
+    if ((start > numberOfTransactions) || (start > end) || (start <= 0)) {
+        std::cout << "invalid start/end index" << std::endl;
+        return retrievedTransactions; // return an empty list
+    }
 
-	Transaction** retrievedTransactions = new Transaction*[end - start + 1];
-	int i = 0;
+    if (end > numberOfTransactions) {
+        end = numberOfTransactions;
+    }
 
-	for (;;) {
-		retrievedTransactions[i] = *iter;
-		if (iter == iterEnd) { break; }
-		iter++; i++;
-	}
+    std::list<Transaction*>::iterator iterEnd = transactionList.begin();
+    std::advance(iterEnd, end);
 
-	return retrievedTransactions;
+    std::list<Transaction*>::iterator iterStart = transactionList.begin();
+    std::advance(iterStart, start - 1);
+
+    // Iterate from iterStart to iterEnd (inclusive)
+    for (auto iter = iterStart; iter != iterEnd; ++iter) {
+        retrievedTransactions.push_back(*iter);
+    }
+
+    return retrievedTransactions;
 }
+
+
 
 Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 {

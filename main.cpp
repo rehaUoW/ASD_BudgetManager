@@ -15,6 +15,39 @@ int main()
 
     //Vishwa area
 
+    // Assume you have a CategoryLog instance
+    CategoryLog* categoryLog = CategoryLog::GetCategoryLog();
+
+    // Create some categories
+    Category* category1 = new Category(TransactionType::expense, "Groceries");
+    Category* category2 = new Category(TransactionType::income, "Utilities");
+    Category* category3 = new Category(TransactionType::expense, "Entertainment");
+
+    // Add categories to the log
+    categoryLog->AddCategory(category1);
+    categoryLog->AddCategory(category2);
+    categoryLog->AddCategory(category3);
+
+    // Assume you have a TransactionLog instance
+    TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
+
+    
+    // Create some transactions
+    tm date1 = {1, 1, 0, 10, 1, 121}; // 2021-01-10 00:00:00
+    tm date2 = {2, 2, 0, 15, 2, 121}; // 2021-02-15 00:00:00
+    tm date3 = {3, 3, 0, 20, 3, 121}; // 2021-03-20 00:00:00
+
+    Transaction transaction1(TransactionType::expense, date1, 50.0, category1);
+    Transaction transaction2(TransactionType::income, date2, 100.0, category2);
+    Transaction transaction3(TransactionType::expense, date3, 30.0, category3);
+
+    // Add transactions to the log
+    transactionLog->AddTransaction(transaction1);
+    transactionLog->AddTransaction(transaction2);
+    transactionLog->AddTransaction(transaction3);
+
+
+
     //Ninujan area
 
     //Ruvin area

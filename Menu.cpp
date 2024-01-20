@@ -2,7 +2,7 @@ using namespace std;
 
 #include "Menu.h"
 
-Category* Menu::ChooseCategory(std::list<Category*>& categories)
+Category* Menu::ChooseCategory(list<Category*>& categories)
 {
     int choice;
 
@@ -65,6 +65,11 @@ void Menu::EnterTrasactionWizard()
     cout << "Enter the transaction date (YYYY MM DD HH MM): ";
     cin >> date_.tm_year >> date_.tm_mon >> date_.tm_mday >> date_.tm_hour >> date_.tm_min;
 
+    // Adjustments for tm structure
+    date_.tm_year -= 1900;  // Adjust for years since 1900
+    date_.tm_mon--;        // Adjust for 0-based months
+
+
     // Get transaction amount
     cout << "Enter the transaction amount: ";
     cin >> amount_;
@@ -79,12 +84,15 @@ void Menu::EnterTrasactionWizard()
     Category* chosenCategory = ChooseCategory(categories);
 
     Transaction newTransaction(transactionType_, date_, amount_, chosenCategory);
-
+ 
     // Assuming transactionLog is an instance of TransactionLog
     TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
     transactionLog->AddTransaction(newTransaction);
-
+    viewLastNTransactions(transactionLog, 10);
     cout << "Transaction added successfully!\n";
+    //newTransaction.PrintTransaction();
+    //PrintAllTransactions(transactionLog);
+
 }
 
 void Menu::ViewTransactionsWizard()
@@ -128,18 +136,32 @@ void Menu::ViewTransactionsWizard()
         break;
 
     case 5:
+    {
         // Specific number of transactions
-        int numTransactions;
-        cout << "Enter the number of transactions to view: ";
-        cin >> numTransactions;
-        viewLastNTransactions(transactionLog, numTransactions);
+        int viewNumTransactions;
+        int numberOfTransactions = transactionLog->GetNumberOfTransactions();
+
+        do {
+            cout << "Enter the number of transactions to view (up to " << numberOfTransactions << "): ";
+            cin >> viewNumTransactions;
+
+            if (viewNumTransactions <= numberOfTransactions) {
+                viewLastNTransactions(transactionLog, viewNumTransactions);
+                break;
+            } else {
+                cout << "Invalid input. Number of transactions to view exceeds the total number of transactions.\n";
+            }
+        }while (viewNumTransactions > numberOfTransactions);
+
         break;
 
+    }
     default:
         cout << "Invalid choice\n";
         break;
     }
 }
+
 
 void Menu::viewTransactionsLastMonth(TransactionLog* transactionLog)
 {
@@ -158,7 +180,7 @@ void Menu::viewTransactionsLastMonth(TransactionLog* transactionLog)
 
     // Retrieve and display transactions for last month
     Transaction** transactions = transactionLog->RetrieveTransactions(lastMonthStartDate, *currentDate);
-    displayTransactions(transactions);
+    //displayTransactions(transactions);
     delete[] transactions;
 }
 
@@ -174,20 +196,24 @@ void Menu::viewTransactionsCurrentMonth(TransactionLog* transactionLog)
 
     // Retrieve and display transactions for the current month
     Transaction** transactions = transactionLog->RetrieveTransactions(currentMonthStartDate, *currentDate);
-    displayTransactions(transactions);
+    //displayTransactions(transactions);
     delete[] transactions;
 }
 
-void Menu::viewLastNTransactions(TransactionLog* transactionLog, int numTransactions)
+void Menu::viewLastNTransactions(TransactionLog* transactionLog, int viewNumTransactions)
 {
-    int start = max(1, transactionLog->GetNumberOfTransactions() - numTransactions + 1);
-    int end = transactionLog->GetNumberOfTransactions();
+    int numberOfTransactions = transactionLog->GetNumberOfTransactions();
+    int start = max(1, numberOfTransactions - viewNumTransactions + 1);
+
+    int end = numberOfTransactions + 1;
 
     // Retrieve and display the last N transactions
-    Transaction** transactions = transactionLog->RetrieveTransactions(start, end);
-    displayTransactions(transactions);
-    delete[] transactions;
+    list<Transaction*> transactionsList = transactionLog->RetrieveTransactions(start, end);
+
+    displayTransactions(transactionsList);
 }
+
+
 
 
 void Menu::viewCustomDateRange(TransactionLog* transactionLog)
@@ -204,17 +230,17 @@ void Menu::viewCustomDateRange(TransactionLog* transactionLog)
 
     // Retrieve and display transactions within the custom date range
     Transaction** transactions = transactionLog->RetrieveTransactions(startDate, endDate);
-    displayTransactions(transactions);
+    //displayTransactions(transactions);
     delete[] transactions;
 }
 
-void Menu::displayTransactions(Transaction** transactions)
+void Menu::displayTransactions(const list<Transaction*>& transactions)
 {
     // Display the transactions
     cout << "List of Transactions:\n";
-    for (int i = 0; transactions[i] != nullptr; ++i)
+    for (const auto& transaction : transactions)
     {
-        transactions[i]->PrintTransaction();
+        transaction->PrintTransaction();
         cout << endl;
     }
 
@@ -224,7 +250,10 @@ void Menu::displayTransactions(Transaction** transactions)
 }
 
 
-// Assuming you have a PrintTransaction method in the Transaction class
+
+
+
+/*
 void Menu::displayTransactionsList(const list<Transaction*>& transactions)
 {
     if (transactions.empty())
@@ -241,7 +270,7 @@ void Menu::displayTransactionsList(const list<Transaction*>& transactions)
         cout << "-----------------------\n";
     }
 }
-
+*/
 
 
 void Menu::EditTransaction()
@@ -252,7 +281,7 @@ void Menu::EditTransaction()
     cout << "Choose a transaction to edit:\n";
 
     // Display transactions
-    displayTransactionsList(transactionLog->GetListOfTransactions());
+    //displayTransactionsList(transactionLog->GetListOfTransactions());
 
     int transactionID;
     cout << "Enter the transaction ID to edit: ";
@@ -362,13 +391,13 @@ void Menu::ViewCategories()
 {
     /*
     if (categories.empty()) {
-        std::cout << "No categories available.\n";
+        cout << "No categories available.\n";
         return;
     }
 
-    std::cout << "Available Categories:\n";
+    cout << "Available Categories:\n";
     for (const Category& category : categories) {
-        std::cout << "Name: " << category.GetName() << ", Budget: " << category.GetBudget() << "\n";
+        cout << "Name: " << category.GetName() << ", Budget: " << category.GetBudget() << "\n";
     }
     */
 }
@@ -376,15 +405,15 @@ void Menu::ViewCategories()
 void Menu::AddNewCategory(Category newCategory)
 {
     /*
-    std::string name;
+    string name;
     int typeInput;
     TransactionType type;
 
-    std::cout << "Enter the name of the new category: ";
-    getline(std::cin, name);
+    cout << "Enter the name of the new category: ";
+    getline(cin, name);
 
-    std::cout << "Select the transaction type (0 for EXPENSE, 1 for INCOME, ...): ";
-    std::cin >> typeInput;
+    cout << "Select the transaction type (0 for EXPENSE, 1 for INCOME, ...): ";
+    cin >> typeInput;
 
     // Simple validation and conversion to TransactionType
     if (typeInput == 0) {
@@ -394,16 +423,16 @@ void Menu::AddNewCategory(Category newCategory)
         type = TransactionType::income;
     }
     else {
-        std::cout << "Invalid transaction type selected. Aborting operation.\n";
+        cout << "Invalid transaction type selected. Aborting operation.\n";
         return;
     }
 
     // Clear the newline character left in the buffer
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     Category newCategory(type, name);
     categories.push_back(newCategory);
-    std::cout << "New category '" << name << "' added successfully.\n";
+    cout << "New category '" << name << "' added successfully.\n";
     */
 }
 
@@ -414,4 +443,18 @@ void Menu::EnterBudgetWizard()
 
 void Menu::PrintBudgetStatus()
 {
+}
+
+
+void Menu::PrintAllTransactions(TransactionLog* transactionLog)
+{
+    // Assuming you have an instance of TransactionLog named 'transactionLog'
+    list<Transaction*> transactions = transactionLog->GetListOfTransactions();
+
+    // Iterate through the list and print each transaction
+    for (const auto& transaction : transactions)
+    {
+        transaction->PrintTransaction();
+        cout << endl;
+    }
 }

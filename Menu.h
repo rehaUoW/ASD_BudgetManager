@@ -32,9 +32,9 @@ public:
     void viewTransactionsCurrentMonth(TransactionLog* transactionLog);
     void viewLastNTransactions(TransactionLog* transactionLog, int numTransactions);
     void viewCustomDateRange(TransactionLog* transactionLog);
-    void displayTransactions(Transaction** transactions);
+    void displayTransactions(const std::list<Transaction*>& transactions);
 
-	void displayTransactionsList(const std::list<Transaction*>& transactions);
+	//void displayTransactionsList(const std::list<Transaction*>& transactions);
 	void EditTransaction();
 
 	void DeleteTransaction();
@@ -48,6 +48,8 @@ public:
 	void PrintBudgetStatus();
 
 	Category* ChooseCategory(std::list<Category*>& categories);
+
+	void PrintAllTransactions(TransactionLog* transactionLog);
 
 };
 #endif
