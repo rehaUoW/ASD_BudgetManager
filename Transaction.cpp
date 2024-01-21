@@ -5,7 +5,7 @@
 
 Transaction::Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_)
 {
-	transactionID = 1;
+	transactionID = 0; //just to initialize
 	transactionType = transactionType_;
 	date = date_;
 	amount = amount_;
@@ -34,9 +34,9 @@ void Transaction::AddRecurranceEndDate(tm endDate)
 	recurranceEndDate = endDate;
 }
 
-void Transaction::IncrementTransactionID()
+void Transaction::SetTransactionID(int ID)
 {
-	transactionID++;
+	transactionID = ID;
 }
 
 void Transaction::SetTransactionType(TransactionType newTransactionType)

@@ -274,7 +274,11 @@ void Menu::EditTransaction()
     // Ask the user which attribute to edit
     cout << "Choose the attribute to edit:\n"
                  "1. Amount\n"
-                 "2. Note\n";
+                 "2. Note\n"
+                 "3. Append Note\n"
+                 "4. Transaction Type and/or Category\n"
+                 "5. Date\n"
+                 "6. Cancel\n";
 
     int choice;
     cin >> choice;
@@ -296,6 +300,37 @@ void Menu::EditTransaction()
             getline(cin, newNote);
             transactionToEdit->AddNote(newNote);
             break;
+        case 3:
+            // Append note
+            cout << "Enter text to append: ";
+            cin.ignore(); // Clear the newline character from the buffer
+            getline(cin, newNote);
+            transactionToEdit->AppendNote(newNote);
+            break;
+        case 4:
+            //Transaction Type and/or Category
+            break;
+        case 5:
+            //Edit date
+            tm newDate;
+            cout << "Enter the new year YYYY: ";
+            int year;
+            cin >> year;
+            year = year - 1900;
+            newDate.tm_year = year;
+            cout << "Enter the new month MM: ";
+            int month;
+            cin >> month;
+            month = month - 1;
+            newDate.tm_mon = month;
+            cout << "Enter the remaining parameters (DD HH MM): ";
+            cin >>  newDate.tm_mday >> newDate.tm_hour >> newDate.tm_min;
+            transactionToEdit->SetDate(newDate);
+            break;
+        case 6:
+            //cancel
+            cout << "Cancelled!\n";
+            return;
         default:
             cout << "Invalid choice. No changes made.\n";
             return;
@@ -309,7 +344,6 @@ void Menu::EditTransaction()
 
 void Menu::DeleteTransaction()
 {
-    /*
     TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
 
     // Display transactions for user to choose from
@@ -339,22 +373,13 @@ void Menu::DeleteTransaction()
     if (confirm == 'y' || confirm == 'Y')
     {
         // Delete the transaction
-        bool success = transactionLog->DeleteTransaction(transactionID);
-
-        if (success)
-        {
-            cout << "Transaction deleted successfully.\n";
-        }
-        else
-        {
-            cout << "Failed to delete transaction.\n";
-        }
+        transactionLog->DeleteTransaction(transactionToDelete);
+        cout << "Transaction deleted!\n";
     }
     else
     {
         cout << "Transaction deletion cancelled.\n";
     }
-    */
 }
 
 

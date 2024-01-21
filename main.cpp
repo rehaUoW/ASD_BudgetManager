@@ -11,7 +11,17 @@ int main()
     int choice;
 
     //Reha area
-    
+    Category c1(TransactionType::income,"testCategory");
+    time_t now_ = time(0);
+    time_t* now = &now_;
+    tm time = *localtime(now);
+    Transaction* t1 = new Transaction(TransactionType::income,time,123,&c1);
+    Transaction* t2 = new Transaction(TransactionType::income,time,456,&c1);
+    Transaction* t3 = new Transaction(TransactionType::income,time,789,&c1);
+
+    (TransactionLog::GetTransactionLog())->AddTransaction(*t1);
+    (TransactionLog::GetTransactionLog())->AddTransaction(*t2);
+    (TransactionLog::GetTransactionLog())->AddTransaction(*t3);
 
     //Vishwa area
 
@@ -99,6 +109,12 @@ int main()
 
 
     //Reha area
+    std::list<Transaction*> list = (TransactionLog::GetTransactionLog())->GetListOfTransactions();
+    std::cout << "LIST AS OF END OF PROGRAM" << std::endl;
+    for (std::list<Transaction*>::iterator iter = list.begin();iter!=list.end();iter++) {
+        (*iter)->PrintTransaction();
+        std::cout << std::endl;
+    }
 
     //Vishwa area
 

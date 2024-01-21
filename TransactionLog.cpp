@@ -7,6 +7,7 @@
 //initialize static members
 TransactionLog* TransactionLog::instance = 0;
 int TransactionLog::numberOfTransactions = 0;
+int TransactionLog::IDCounter = 1;
 
 TransactionLog::TransactionLog()
 {
@@ -37,7 +38,10 @@ int TransactionLog::GetNumberOfTransactions(){
 
 void TransactionLog::AddTransaction(Transaction& newTransaction)
 {
+
 	//log must be kept in chronological order
+	newTransaction.SetTransactionID(IDCounter);
+	IDCounter++;
 	std::list<Transaction*>::iterator iter = transactionList.begin();
 	for (iter; iter!=transactionList.end(); iter++){
 		if ( (*iter)->IsTransactionOlderThan(newTransaction) ) { break; }
