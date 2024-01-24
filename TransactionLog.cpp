@@ -80,12 +80,45 @@ std::list<Transaction*> TransactionLog::RetrieveTransactions(int start, int end)
     for (auto iter = iterStart; iter != iterEnd; ++iter) {
         retrievedTransactions.push_back(*iter);
     }
-
+	//std::cout << "Length of transactions: " << retrievedTransactions.size() << std::endl;
     return retrievedTransactions;
 }
 
 
 
+std::list<Transaction*> TransactionLog::RetrieveTransactions(tm start, tm end)
+{
+    if (mktime(&start) == -1 || mktime(&end) == -1) {
+        std::cout << "Invalid tm objects" << std::endl;
+        return std::list<Transaction*>();  // Return an empty list
+    }
+
+    if (mktime(&end) < mktime(&start))
+	{
+    	std::cout << "End is earlier than start" << std::endl;
+    	return {}; // Return an empty list
+	}
+
+
+    std::list<Transaction*> retrievedTransactions;
+
+    for (const auto& transaction : transactionList) {
+        tm timestamp = transaction->GetDate(); 
+
+        if (std::difftime(std::mktime(&timestamp), std::mktime(&start)) >= 0 &&
+            std::difftime(std::mktime(&end), std::mktime(&timestamp)) >= 0) {
+            retrievedTransactions.push_back(transaction);
+        }
+    }
+
+	//std::cout << "Length of transactions: " << retrievedTransactions.size() << std::endl;
+    return retrievedTransactions;
+}
+
+
+
+
+/*
 Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 {
 	if ( (mktime(&start) == -1) || (mktime(&end) == -1) ) {
@@ -124,6 +157,8 @@ Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
 	return retrievedTransactions;
 	//this would have been much shorter if we returned a list or something but for now sticking with the decision to return a static array
 }
+
+*/
 
 Transaction* TransactionLog::FindTransactionByID(int transactionID)
 {

@@ -14,13 +14,25 @@
 #include "Transaction.h"
 #include "TransactionType.h"
 // #include "CommonFunctions.h"
+using namespace std;
+
+enum class DateRangeType
+{
+    LastMonth,
+    CurrentMonth,
+    Custom
+};
 
 class Menu
 {
 private:
     //TransactionLog transactionLog;
 
-    //Category* ChooseCategory(std::list<Category*>& categories);
+    //Category* ChooseCategory(list<Category*>& categories);
+	tm calculateLastMonthStartDate(const tm& currentDate);
+    tm calculateLastMonthEndDate(const tm& currentDate);
+    tm calculateCurrentMonthStartDate(const tm& currentDate);
+    string formatDate(const tm& date);
 
 
 public:
@@ -28,13 +40,14 @@ public:
 	void EnterTrasactionWizard();
 
 	void ViewTransactionsWizard();
-    void viewTransactionsLastMonth(TransactionLog* transactionLog);
-    void viewTransactionsCurrentMonth(TransactionLog* transactionLog);
+    //void viewTransactionsLastMonth(TransactionLog* transactionLog);
+    //void viewTransactionsCurrentMonth(TransactionLog* transactionLog);
     void viewLastNTransactions(TransactionLog* transactionLog, int numTransactions);
-    void viewCustomDateRange(TransactionLog* transactionLog);
-    void displayTransactions(const std::list<Transaction*>& transactions);
+	void viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType);
+    //void viewCustomDateRange(TransactionLog* transactionLog);
+    void displayTransactions(const list<Transaction*>& transactions);
 
-	//void displayTransactionsList(const std::list<Transaction*>& transactions);
+	//void displayTransactionsList(const list<Transaction*>& transactions);
 	void EditTransaction();
 
 	void DeleteTransaction();
@@ -47,9 +60,10 @@ public:
 
 	void PrintBudgetStatus();
 
-	Category* ChooseCategory(std::list<Category*>& categories);
+	Category* ChooseCategory(const list<Category*>& categories, TransactionType transactionType);
 
 	void PrintAllTransactions(TransactionLog* transactionLog);
 
+	tm getUserInputDate(const string& prompt);
 };
 #endif

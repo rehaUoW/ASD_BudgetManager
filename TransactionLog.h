@@ -3,7 +3,7 @@
 
 #include <list>
 #include <ctime>
-
+#include <iostream>
 
 #include "Transaction.h"
 
@@ -41,7 +41,8 @@ public:
 	Transaction** RetrieveTransactions(int start, int end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 	//usage: arguments 1 & 5 means the first thru fifth item in the list (inclusive) will be returned
 */
-	Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
+	std::list<Transaction*> RetrieveTransactions(tm start, tm end);
+	//Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 
 	Transaction* FindTransactionByID(int transactionID); //Vishwa 
 };
