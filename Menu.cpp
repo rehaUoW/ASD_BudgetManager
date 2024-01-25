@@ -54,6 +54,7 @@ void Menu::EnterTrasactionWizard()
     TransactionType transactionType_;
     tm date_;
     double amount_;
+    string note_;
     cout << endl;
     cout << "----------------------------" << endl;
     cout << "Enter the transaction details:\n";
@@ -77,7 +78,7 @@ void Menu::EnterTrasactionWizard()
 
     // Assuming you have a CategoryLog instance
     CategoryLog* categoryLog = CategoryLog::GetCategoryLog();
-
+    cout << endl;
     // Display the list of categories or implement a method to choose a category
     list<Category*> categories = categoryLog->GetListOfCategories();
 
@@ -100,6 +101,12 @@ void Menu::EnterTrasactionWizard()
     TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
 
     transactionLog->AddTransaction(*newTransaction);
+    cout << endl;
+    cout << "Enter the Note: ";
+    cin.ignore();
+    getline(cin, note_);
+    newTransaction->AddNote(note_);
+
     //viewLastNTransactions(transactionLog, 10);
     cout << endl;
     cout << "----------------------------" << endl;
