@@ -20,10 +20,12 @@ public:
 	Category(TransactionType transactionType_, std::string name_);
 
 	std::string GetName();
+	TransactionType GetTransactionType();
 
 	double GetBudget();
 
 	void SetName(std::string newName);
+
 
 	void SetBudget(double value);
 	TransactionType GetTransactionType();

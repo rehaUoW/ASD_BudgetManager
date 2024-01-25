@@ -3,6 +3,7 @@
 
 #include <list>
 #include <ctime>
+#include <iostream>
 
 #include "Transaction.h"
 
@@ -18,6 +19,8 @@ private:
 	static int numberOfTransactions;
 
 	std::list<Transaction*> transactionList; //front of list is the most recent
+
+	static int IDCounter;
 
 private:
 	TransactionLog();
@@ -35,10 +38,13 @@ public:
 
 	void DeleteTransaction(Transaction* transaction);
 
+	std::list<Transaction*> RetrieveTransactions(int start, int end);
+/*
 	Transaction** RetrieveTransactions(int start, int end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 	//usage: arguments 1 & 5 means the first thru fifth item in the list (inclusive) will be returned
-
-	Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
+*/
+	std::list<Transaction*> RetrieveTransactions(tm start, tm end);
+	//Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
 
 	Transaction* FindTransactionByID(int transactionID); //Vishwa 
 };

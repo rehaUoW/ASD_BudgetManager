@@ -41,7 +41,7 @@ public:
 
 	void AddRecurranceEndDate(tm endDate);	
 
-	void IncrementTransactionID();
+	void SetTransactionID(int ID);
 	
 	void SetTransactionType(TransactionType newTransactionType);
 

@@ -19,6 +19,11 @@ std::string Category::GetName()
 	return name;
 }
 
+TransactionType Category::GetTransactionType()
+{
+	return transactionType;
+}
+
 double Category::GetBudget()
 {
 	return budget;
