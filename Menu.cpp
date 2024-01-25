@@ -190,6 +190,7 @@ void Menu::ViewTransactionsWizard()
 
 void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType)
 {
+    /*
     // Get the current date
     time_t currentTime = time(nullptr);
     tm* currentDate = localtime(&currentTime);
@@ -244,15 +245,18 @@ tm Menu::calculateLastMonthStartDate(const tm& currentDate)
         lastMonthStartDate.tm_mon += 12;
         lastMonthStartDate.tm_year -= 1;
     }
+
     lastMonthStartDate.tm_mday = 1; // Set to the 1st day of the month
     lastMonthStartDate.tm_hour = 0;
     lastMonthStartDate.tm_min = 0;
     lastMonthStartDate.tm_sec = 0;
     return lastMonthStartDate;
+
 }
 
 tm Menu::calculateLastMonthEndDate(const tm& currentDate)
 {
+
     tm lastMonthEndDate = currentDate;
     lastMonthEndDate.tm_mday = 1; // Set to the first day of the current month
     lastMonthEndDate.tm_hour = 0;
@@ -265,6 +269,7 @@ tm Menu::calculateLastMonthEndDate(const tm& currentDate)
     lastMonthEndDate = *localtime(&lastMonthEndTimestamp);
 
     return lastMonthEndDate;
+
 }
 
 tm Menu::calculateCurrentMonthStartDate(const tm& currentDate)
@@ -509,33 +514,48 @@ void Menu::DeleteTransaction()
 
 void Menu::ViewCategories()
 {
-    /*
+    // Get the list of categories from CategoryLog
+    std::list<Category*> categories = CategoryLog::GetCategoryLog()->GetListOfCategories();
+
     if (categories.empty()) {
         cout << "No categories available.\n";
         return;
     }
 
-    cout << "Available Categories:\n";
-    for (const Category& category : categories) {
-        cout << "Name: " << category.GetName() << ", Budget: " << category.GetBudget() << "\n";
+
+    std::cout << "Available Categories:\n";
+    for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
+        Category& category = *categoryPtr;
+ 
+        if (categoryPtr) {
+            // Using GetName and GetBudget methods to retrieve category information
+            std::cout << "Name: " << categoryPtr->GetName() << ", Transaction Type: " << categoryPtr->GetTransactionType() << ", Budget: " << categoryPtr->GetBudget() << "\n";
+        }
+        else {
+            std::cout << "Invalid category detected.\n";
+        }
+
     }
-    */
 }
 
-void Menu::AddNewCategory(Category newCategory)
-{
-    /*
-    string name;
+
+void Menu::AddNewCategory() {
+    std::string name;
     int typeInput;
     TransactionType type;
 
-    cout << "Enter the name of the new category: ";
-    getline(cin, name);
+    std::cout << "Enter the name of the new category: ";
+    std::cin >> name;
+
 
     cout << "Select the transaction type (0 for EXPENSE, 1 for INCOME, ...): ";
     cin >> typeInput;
 
-    // Simple validation and conversion to TransactionType
+
+
+    // Clear the newline character left in the buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     if (typeInput == 0) {
         type = TransactionType::expense;
     }
@@ -547,22 +567,42 @@ void Menu::AddNewCategory(Category newCategory)
         return;
     }
 
-    // Clear the newline character left in the buffer
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    // Creating a new category dynamically
+    Category* newCategory = new Category(type, name);
 
-    Category newCategory(type, name);
-    categories.push_back(newCategory);
-    cout << "New category '" << name << "' added successfully.\n";
-    */
+    // Adding the new category to CategoryLog
+    CategoryLog::GetCategoryLog()->AddCategory(newCategory);
+
+    std::cout << "New category '" << name << "' added successfully.\n";
+
 }
 
 void Menu::EnterBudgetWizard()
 {
+    
+    for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
+        Category& category = *categoryPtr;
+        double budget;
+        std::cout << "Enter the budget for " << category.GetName() << ": ";
+        while (!(std::cin >> budget)) {
+            std::cout << "Invalid input. Please enter a number for " << category.GetName() << ": ";
+            std::cin.clear(); // clear the error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the incorrect input
+        }
+        category.SetBudget(budget);
+        std::cout << "Budget set for " << category.GetName() << ": LKR" << budget << std::endl;
+    }
+    
 
 }
 
 void Menu::PrintBudgetStatus()
 {
+    for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
+        Category& category = *categoryPtr;
+        std::cout << "Budget set for " << category.GetName() << ": LKR" << category.GetBudget() << std::endl;
+    }
+
 }
 
 

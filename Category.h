@@ -5,7 +5,6 @@
 
 #include "TransactionType.h"
 
-
 class Category
 {
 private:
@@ -29,6 +28,7 @@ public:
 
 
 	void SetBudget(double value);
+	TransactionType GetTransactionType();
 
 };
 #endif
