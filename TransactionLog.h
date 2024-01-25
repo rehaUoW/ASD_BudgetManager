@@ -20,6 +20,8 @@ private:
 
 	std::list<Transaction*> transactionList; //front of list is the most recent
 
+	static int IDCounter;
+
 private:
 	TransactionLog();
 
