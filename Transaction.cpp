@@ -79,7 +79,7 @@ void Transaction::PrintTransaction()
 	std::cout<<"Amount: " << amount << std::endl;
 	if (note != "")
 	{
-		std::cout << note << std::endl;
+		std::cout << "Note: " << note << std::endl;
 	}
 	if (recurring != 0) {
 		std::cout << "Repeats ";
