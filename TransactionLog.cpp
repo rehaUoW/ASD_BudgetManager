@@ -154,7 +154,7 @@ std::list<Transaction*> TransactionLog::RetrieveTransactions(tm start, tm end)
     if (mktime(&end) < mktime(&start))
 	{
     	std::cout << "End is earlier than start" << std::endl;
-    	return {}; // Return an empty list
+    	return std::list<Transaction*>();  // Return an empty list
 	}
 
 
