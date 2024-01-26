@@ -4,53 +4,8 @@
 
 using namespace std;
 
-Category* Menu::ChooseCategory(const std::list<Category*>& categories, TransactionType transactionType)
-{
-    std::vector<Category*> validCategories;
 
-    for (const auto& category : categories)
-    {
-        if (category->GetTransactionType() == transactionType)
-        {
-            validCategories.push_back(category);
-        }
-    }
-
-    // Display the list of valid categories
-    if (validCategories.empty())
-    {
-        std::cout << "No valid categories available for the specified transaction type.\n";
-        return nullptr;
-    }
-
-    while (true)
-    {
-        std::cout << "Choose a category:\n";
-        std::cout << "----------------------------" << std::endl;
-        for (size_t i = 0; i < validCategories.size(); ++i)
-        {
-            std::cout << i + 1 << ". " << validCategories[i]->GetName() << '\n';
-        }
-        std::cout << "----------------------------" << std::endl;
-        // Get user input for category choice
-        int choice;
-        std::cout << "Enter the number corresponding to the category: ";
-        std::cin >> choice;
-        //std::cout << "----------------------------" << std::endl;
-        // Validate the user's choice
-        if (choice >= 1 && choice <= static_cast<int>(validCategories.size()))
-        {
-            return validCategories[choice - 1];
-        }
-        else
-        {
-            std::cout << "Invalid choice. Please enter a valid category number.\n";
-        }
-    }
-}
-
-
-
+/*Wizards*/
 void Menu::EnterTrasactionWizard()
 {
     TransactionType transactionType_;
@@ -233,194 +188,6 @@ void Menu::ViewTransactionsWizard()
         break;
     }
 }
-
-
-void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType)
-{
-    
-    // Get the current date
-    time_t currentTime = time(nullptr);
-    tm* currentDate = localtime(&currentTime);
-
-    tm startDate;
-    tm endDate;
-
-    // Set the appropriate start and end dates based on the selected rangeType
-    if (rangeType == DateRangeType::LastMonth)
-    {
-        startDate = calculateLastMonthStartDate(*currentDate);
-        endDate = calculateLastMonthEndDate(*currentDate);
-    }
-    else if (rangeType == DateRangeType::CurrentMonth)
-    {
-        startDate = calculateCurrentMonthStartDate(*currentDate);
-        endDate = *currentDate;
-    }
-    else if (rangeType == DateRangeType::Custom)
-    {
-        startDate = getUserInputDate("start");
-        endDate = getUserInputDate("end");
-
-        /*
-        // Get start date from the user
-        
-        std::cout << "Enter the start date (YYYY MM DD HH MM): ";
-        std::cin >> startDate.tm_year >> startDate.tm_mon >> startDate.tm_mday >> startDate.tm_hour >> startDate.tm_min;
-        
-        // Get end date from the user
-        std::cout << "Enter the end date (YYYY MM DD HH MM): ";
-        std::cin >> endDate.tm_year >> endDate.tm_mon >> endDate.tm_mday >> endDate.tm_hour >> endDate.tm_min;
-        */
-
-    }
-
-    cout << "----------------------------" << endl;
-    std::cout << "Start Date: " << formatDate(startDate) << std::endl;
-    std::cout << "End Date: " << formatDate(endDate) << std::endl;
-    cout << "----------------------------" << endl;
-
-    // Retrieve and display transactions within the custom date range
-    std::list<Transaction*> transactions = transactionLog->RetrieveTransactions(startDate, endDate);
-    displayTransactions(transactions);
-    //delete[] transactions; // Note: This is not needed if you are using std::list or smart pointers for memory management
-}
-
-tm Menu::calculateLastMonthStartDate(const tm& currentDate)
-{
-    tm lastMonthStartDate = currentDate;
-    lastMonthStartDate.tm_mon -= 1;
-    if (lastMonthStartDate.tm_mon < 0)
-    {
-        lastMonthStartDate.tm_mon += 12;
-        lastMonthStartDate.tm_year -= 1;
-    }
-
-    lastMonthStartDate.tm_mday = 1; // Set to the 1st day of the month
-    lastMonthStartDate.tm_hour = 0;
-    lastMonthStartDate.tm_min = 0;
-    lastMonthStartDate.tm_sec = 0;
-    return lastMonthStartDate;
-
-}
-
-tm Menu::calculateLastMonthEndDate(const tm& currentDate)
-{
-
-    tm lastMonthEndDate = currentDate;
-    lastMonthEndDate.tm_mday = 1; // Set to the first day of the current month
-    lastMonthEndDate.tm_hour = 0;
-    lastMonthEndDate.tm_min = 0;
-    lastMonthEndDate.tm_sec = 0;
-
-    // Subtract 1 second to get the last second of the last day of the previous month
-    time_t lastMonthEndTimestamp = mktime(&lastMonthEndDate);
-    lastMonthEndTimestamp -= 1;
-    lastMonthEndDate = *localtime(&lastMonthEndTimestamp);
-
-    return lastMonthEndDate;
-
-}
-
-tm Menu::calculateCurrentMonthStartDate(const tm& currentDate)
-{
-    tm currentMonthStartDate = currentDate;
-    currentMonthStartDate.tm_mday = 1; // Set to the 1st day of the month
-    currentMonthStartDate.tm_hour = 0;
-    currentMonthStartDate.tm_min = 0;
-    currentMonthStartDate.tm_sec = 0;
-    return currentMonthStartDate;
-}
-
-std::string Menu::formatDate(const tm& date)
-{
-    return std::to_string(date.tm_year + 1900) + "-" +
-           std::to_string(date.tm_mon + 1) + "-" +
-           std::to_string(date.tm_mday) + " " +
-           std::to_string(date.tm_hour) + ":" +
-           std::to_string(date.tm_min) + ":" +
-           std::to_string(date.tm_sec);
-}
-
-
-
-void Menu::viewLastNTransactions(TransactionLog* transactionLog, int viewNumTransactions)
-{
-    int numberOfTransactions = transactionLog->GetNumberOfTransactions();
-    int start = 1;
-    //int start = max(1, min(numberOfTransactions - viewNumTransactions + 1, numberOfTransactions - 1));
-
-    int end = viewNumTransactions;
-    cout << "----------------------------" << endl;
-    cout << "Start: " << start << endl;
-    cout << "End: " << end << endl;
-    cout << "----------------------------" << endl;
-    // Retrieve and display the last N transactions
-    list<Transaction*> transactionsList = transactionLog->RetrieveTransactions(start, end);
-
-    displayTransactions(transactionsList);
-}
-
-
-
-
-void Menu::displayTransactions(const std::list<Transaction*>& transactions)
-{
-    // Check if the list is empty
-    if (transactions.empty())
-    {
-        cout << "----------------------------" << endl;
-        cout << "No transactions to display." << endl;
-        cout << "----------------------------" << endl;
-        return;
-    }
-
-    // Display the transactions
-    cout << "----------------------------" << endl;
-    cout << "List of Transactions:\n";
-    cout << "----------------------------" << endl;
-    for (const auto& transaction : transactions)
-    {
-        cout << endl;
-        transaction->PrintTransaction();
-        cout << endl;
-        cout << "----------------------------" << endl;
-    }
-
-    cout << "----------------------------" << endl;
-    cout << endl;
-
-    // Display the total number of transactions
-    cout << "Length of transactions: " << transactions.size() << endl;
-    int totalTransactions = TransactionLog::GetTransactionLog()->GetNumberOfTransactions();
-    cout << "Total number of transactions: " << totalTransactions << endl;
-    cout << endl;
-    cout << "----------------------------" << endl;
-}
-
-
-
-
-
-
-/*
-void Menu::displayTransactionsList(const list<Transaction*>& transactions)
-{
-    if (transactions.empty())
-    {
-        cout << "No transactions to display.\n";
-        return;
-    }
-
-    cout << "Transaction List:\n";
-    for (const auto& transaction : transactions)
-    {
-        cout << "ID: " << transaction->GetTransactionID() << "\n";
-        transaction->PrintTransaction();
-        cout << "-------------------------------\n";
-    }
-}
-*/
-
 
 void Menu::EditTransaction()
 {
@@ -695,6 +462,208 @@ void Menu::PrintBudgetStatus()
     }
 
 }
+
+
+
+/*Helper Functions*/
+void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType)
+{
+    
+    // Get the current date
+    time_t currentTime = time(nullptr);
+    tm* currentDate = localtime(&currentTime);
+
+    tm startDate;
+    tm endDate;
+
+    // Set the appropriate start and end dates based on the selected rangeType
+    if (rangeType == DateRangeType::LastMonth)
+    {
+        startDate = calculateLastMonthStartDate(*currentDate);
+        endDate = calculateLastMonthEndDate(*currentDate);
+    }
+    else if (rangeType == DateRangeType::CurrentMonth)
+    {
+        startDate = calculateCurrentMonthStartDate(*currentDate);
+        endDate = *currentDate;
+    }
+    else if (rangeType == DateRangeType::Custom)
+    {
+        startDate = getUserInputDate("start");
+        endDate = getUserInputDate("end");
+    }
+
+    cout << "----------------------------" << endl;
+    std::cout << "Start Date: " << formatDate(startDate) << std::endl;
+    std::cout << "End Date: " << formatDate(endDate) << std::endl;
+    cout << "----------------------------" << endl;
+
+    // Retrieve and display transactions within the custom date range
+    std::list<Transaction*> transactions = transactionLog->RetrieveTransactions(startDate, endDate);
+    displayTransactions(transactions);
+    //delete[] transactions; // Note: This is not needed if you are using std::list or smart pointers for memory management
+}
+
+tm Menu::calculateLastMonthStartDate(const tm& currentDate)
+{
+    tm lastMonthStartDate = currentDate;
+    lastMonthStartDate.tm_mon -= 1;
+    if (lastMonthStartDate.tm_mon < 0)
+    {
+        lastMonthStartDate.tm_mon += 12;
+        lastMonthStartDate.tm_year -= 1;
+    }
+
+    lastMonthStartDate.tm_mday = 1; // Set to the 1st day of the month
+    lastMonthStartDate.tm_hour = 0;
+    lastMonthStartDate.tm_min = 0;
+    lastMonthStartDate.tm_sec = 0;
+    return lastMonthStartDate;
+
+}
+
+tm Menu::calculateLastMonthEndDate(const tm& currentDate)
+{
+
+    tm lastMonthEndDate = currentDate;
+    lastMonthEndDate.tm_mday = 1; // Set to the first day of the current month
+    lastMonthEndDate.tm_hour = 0;
+    lastMonthEndDate.tm_min = 0;
+    lastMonthEndDate.tm_sec = 0;
+
+    // Subtract 1 second to get the last second of the last day of the previous month
+    time_t lastMonthEndTimestamp = mktime(&lastMonthEndDate);
+    lastMonthEndTimestamp -= 1;
+    lastMonthEndDate = *localtime(&lastMonthEndTimestamp);
+
+    return lastMonthEndDate;
+
+}
+
+tm Menu::calculateCurrentMonthStartDate(const tm& currentDate)
+{
+    tm currentMonthStartDate = currentDate;
+    currentMonthStartDate.tm_mday = 1; // Set to the 1st day of the month
+    currentMonthStartDate.tm_hour = 0;
+    currentMonthStartDate.tm_min = 0;
+    currentMonthStartDate.tm_sec = 0;
+    return currentMonthStartDate;
+}
+
+std::string Menu::formatDate(const tm& date)
+{
+    return std::to_string(date.tm_year + 1900) + "-" +
+           std::to_string(date.tm_mon + 1) + "-" +
+           std::to_string(date.tm_mday) + " " +
+           std::to_string(date.tm_hour) + ":" +
+           std::to_string(date.tm_min) + ":" +
+           std::to_string(date.tm_sec);
+}
+
+
+
+void Menu::viewLastNTransactions(TransactionLog* transactionLog, int viewNumTransactions)
+{
+    int numberOfTransactions = transactionLog->GetNumberOfTransactions();
+    int start = 1;
+
+    int end = viewNumTransactions;
+    cout << "----------------------------" << endl;
+    cout << "Start: " << start << endl;
+    cout << "End: " << end << endl;
+    cout << "----------------------------" << endl;
+    // Retrieve and display the last N transactions
+    list<Transaction*> transactionsList = transactionLog->RetrieveTransactions(start, end);
+
+    displayTransactions(transactionsList);
+}
+
+
+
+void Menu::displayTransactions(const std::list<Transaction*>& transactions)
+{
+    // Check if the list is empty
+    if (transactions.empty())
+    {
+        cout << "----------------------------" << endl;
+        cout << "No transactions to display." << endl;
+        cout << "----------------------------" << endl;
+        return;
+    }
+
+    // Display the transactions
+    cout << "----------------------------" << endl;
+    cout << "List of Transactions:\n";
+    cout << "----------------------------" << endl;
+    for (const auto& transaction : transactions)
+    {
+        cout << endl;
+        transaction->PrintTransaction();
+        cout << endl;
+        cout << "----------------------------" << endl;
+    }
+
+    cout << "----------------------------" << endl;
+    cout << endl;
+
+    // Display the total number of transactions
+    cout << "Length of transactions: " << transactions.size() << endl;
+    int totalTransactions = TransactionLog::GetTransactionLog()->GetNumberOfTransactions();
+    cout << "Total number of transactions: " << totalTransactions << endl;
+    cout << endl;
+    cout << "----------------------------" << endl;
+}
+
+
+
+
+
+Category* Menu::ChooseCategory(const std::list<Category*>& categories, TransactionType transactionType)
+{
+    std::vector<Category*> validCategories;
+
+    for (const auto& category : categories)
+    {
+        if (category->GetTransactionType() == transactionType)
+        {
+            validCategories.push_back(category);
+        }
+    }
+
+    // Display the list of valid categories
+    if (validCategories.empty())
+    {
+        std::cout << "No valid categories available for the specified transaction type.\n";
+        return nullptr;
+    }
+
+    while (true)
+    {
+        std::cout << "Choose a category:\n";
+        std::cout << "----------------------------" << std::endl;
+        for (size_t i = 0; i < validCategories.size(); ++i)
+        {
+            std::cout << i + 1 << ". " << validCategories[i]->GetName() << '\n';
+        }
+        std::cout << "----------------------------" << std::endl;
+        // Get user input for category choice
+        int choice;
+        std::cout << "Enter the number corresponding to the category: ";
+        std::cin >> choice;
+        //std::cout << "----------------------------" << std::endl;
+        // Validate the user's choice
+        if (choice >= 1 && choice <= static_cast<int>(validCategories.size()))
+        {
+            return validCategories[choice - 1];
+        }
+        else
+        {
+            std::cout << "Invalid choice. Please enter a valid category number.\n";
+        }
+    }
+}
+
+
 
 
 void Menu::PrintAllTransactions(TransactionLog* transactionLog)

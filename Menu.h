@@ -13,7 +13,7 @@
 #include "TransactionLog.h"
 #include "Transaction.h"
 #include "TransactionType.h"
-// #include "CommonFunctions.h"
+
 using namespace std;
 
 enum class DateRangeType
@@ -26,9 +26,8 @@ enum class DateRangeType
 class Menu
 {
 private:
-    //TransactionLog transactionLog;
 
-    //Category* ChooseCategory(list<Category*>& categories);
+	/*Helper functions*/
 	tm calculateLastMonthStartDate(const tm& currentDate);
     tm calculateLastMonthEndDate(const tm& currentDate);
     tm calculateCurrentMonthStartDate(const tm& currentDate);
@@ -37,17 +36,11 @@ private:
 
 public:
 	
+	/*Wizards*/
 	void EnterTrasactionWizard();
 
 	void ViewTransactionsWizard();
-    //void viewTransactionsLastMonth(TransactionLog* transactionLog);
-    //void viewTransactionsCurrentMonth(TransactionLog* transactionLog);
-    void viewLastNTransactions(TransactionLog* transactionLog, int numTransactions);
-	void viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType);
-    //void viewCustomDateRange(TransactionLog* transactionLog);
-    void displayTransactions(const list<Transaction*>& transactions);
 
-	//void displayTransactionsList(const list<Transaction*>& transactions);
 	void EditTransaction();
 
 	void DeleteTransaction();
@@ -59,6 +52,14 @@ public:
 	void EnterBudgetWizard();
 
 	void PrintBudgetStatus();
+
+
+	/*Helper functions*/
+    void viewLastNTransactions(TransactionLog* transactionLog, int numTransactions);
+
+	void viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType);
+
+    void displayTransactions(const list<Transaction*>& transactions);	
 
 	Category* ChooseCategory(const list<Category*>& categories, TransactionType transactionType);
 

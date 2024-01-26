@@ -2,7 +2,7 @@
 #include "Transaction.h"
 #include "CommonFunctions.h"
 
-
+/*Constructors*/
 Transaction::Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_)
 {
 	transactionID = 0; //just to initialize
@@ -27,6 +27,9 @@ Transaction::Transaction(Transaction& t){
 	category = t.category;
 } // copy constructor
 
+
+
+/*Setters*/
 void Transaction::AddNote(std::string note_)
 {
 	note = note_;
@@ -72,6 +75,13 @@ void Transaction::SetCategory(Category* newCategory)
 	category = newCategory;
 }
 
+void Transaction::SetRecurringID(int id){
+	recurringID = id;
+}
+
+
+
+/*Getters*/
 void Transaction::PrintTransaction()
 {
 	std::cout<<"Transaction ID: " << transactionID << std::endl;;
@@ -163,6 +173,9 @@ Category* Transaction::GetCategory()
 	return category;
 }
 
+
+
+/*Predicates*/
 bool Transaction::IsTransactionOlderThan(Transaction& anotherTransaction){
 	tm anotherDate = anotherTransaction.GetDate();
 	return mktime(&date) < mktime(&anotherDate);
@@ -172,6 +185,3 @@ bool Transaction::IsTransactionOlderThan(tm& time){
     return mktime(&date) < mktime(&time);
 }
 
-void Transaction::SetRecurringID(int id){
-	recurringID = id;
-}

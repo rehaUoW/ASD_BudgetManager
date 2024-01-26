@@ -12,12 +12,12 @@ int TransactionLog::recurringIDCounter = 1;
 
 TransactionLog::TransactionLog()
 {
-	//no need any special initialization of the list object I think
+	//no need any special initialization of the list object
 }
 
 TransactionLog::TransactionLog(TransactionLog& transactionLog)
 {
-	//is it even necessary to declare the copy constructor?
+	
 }
 
 TransactionLog* TransactionLog::GetTransactionLog()
@@ -26,7 +26,7 @@ TransactionLog* TransactionLog::GetTransactionLog()
 		instance = new TransactionLog();
 	}
 	return instance;
-}
+}//singleton accessor
 
 std::list<Transaction*> TransactionLog::GetListOfTransactions()
 {
@@ -41,7 +41,7 @@ void TransactionLog::AddTransaction(Transaction& newTransaction)
 {
 
 	//log must be kept in chronological order
-	newTransaction.SetTransactionID(IDCounter);
+	newTransaction.SetTransactionID(IDCounter); //assigns unique ID
 	IDCounter++;
 	std::list<Transaction*>::iterator iter = transactionList.begin();
 	for (iter; iter!=transactionList.end(); iter++){
@@ -53,7 +53,7 @@ void TransactionLog::AddTransaction(Transaction& newTransaction)
 
 void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm EndDate){
 	RecurringType rf = newTransaction.GetRecurring();
-	newTransaction.SetRecurringID(recurringIDCounter);
+	newTransaction.SetRecurringID(recurringIDCounter); //sets unique recurring ID for the entire set of transactions that will be cloned
 	recurringIDCounter++;
 	tm currentDate = newTransaction.GetDate();
 	time_t currentDateS = std::mktime(&currentDate);
@@ -61,6 +61,7 @@ void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm En
 	switch (rf)
 	{
 	case 1:
+		// recur annually
 		while(currentDateS < endDateS){
 			Transaction* recurTransaction = new Transaction(newTransaction);
 			currentDate.tm_year = currentDate.tm_year + 1;
@@ -70,6 +71,7 @@ void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm En
 		}
 		break;
 	case 2:
+		//recur monthly
 		while(currentDateS < endDateS){
 			Transaction* recurTransaction = new Transaction(newTransaction);
 			currentDate.tm_mon = currentDate.tm_mon + 1;
@@ -79,6 +81,7 @@ void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm En
 		}
 		break;	
 	case 3:
+		//recur weekly
 		while(currentDateS < endDateS){
 			Transaction* recurTransaction = new Transaction(newTransaction);
 			currentDate.tm_yday = currentDate.tm_yday + 7;
@@ -88,7 +91,7 @@ void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm En
 		}
 		break;	
 	case 4:
-		std::cout << "daily ";
+		//recur daily
 		while(currentDateS < endDateS){
 			Transaction* recurTransaction = new Transaction(newTransaction);
 			currentDate.tm_yday = currentDate.tm_yday + 1;
@@ -100,7 +103,7 @@ void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm En
 	default:
 		break;
 	}
-}
+} // feeds cloned transaction objects to the TransactionLog::AddTransaction function
 
 void TransactionLog::DeleteTransaction(Transaction* transaction)
 {
@@ -136,7 +139,6 @@ std::list<Transaction*> TransactionLog::RetrieveTransactions(int start, int end)
     for (auto iter = iterStart; iter != iterEnd; ++iter) {
         retrievedTransactions.push_back(*iter);
     }
-	//std::cout << "Length of transactions: " << retrievedTransactions.size() << std::endl;
     return retrievedTransactions;
 }
 
@@ -167,54 +169,10 @@ std::list<Transaction*> TransactionLog::RetrieveTransactions(tm start, tm end)
         }
     }
 
-	//std::cout << "Length of transactions: " << retrievedTransactions.size() << std::endl;
     return retrievedTransactions;
 }
 
 
-
-
-/*
-Transaction** TransactionLog::RetrieveTransactions(tm start, tm end)
-{
-	if ( (mktime(&start) == -1) || (mktime(&end) == -1) ) {
-		std::cout << "invalid tm objects" << std::endl;
-		return nullptr;
-	}
-	if ( (mktime(&start) == -1) < (mktime(&end) == -1) ) {
-		std::cout << "start is older than end" << std::endl;
-		return nullptr;
-	}
-
-	std::list<Transaction*>::iterator iterStart = transactionList.begin();
-	
-
-	for (iterStart; iterStart!=transactionList.end(); iterStart++){
-		if ( (*iterStart)->IsTransactionOlderThan(start) ) { break; }
-	}
-
-	std::list<Transaction*>::iterator iterEnd = iterStart;
-	std::list<Transaction*>::iterator iter = iterStart;
-
-	for (iterEnd; iterEnd!=transactionList.end(); iterEnd++){
-		if ( (*iterEnd)->IsTransactionOlderThan(end) ) { break; }
-	}
-
-
-	Transaction** retrievedTransactions = new Transaction*[std::distance(iterEnd,iterStart)];
-	int i = 0;
-
-	for (;;) {
-		retrievedTransactions[i] = *iter;
-		if (iter == iterEnd) { break; }
-		iter++; i++;
-	}
-
-	return retrievedTransactions;
-	//this would have been much shorter if we returned a list or something but for now sticking with the decision to return a static array
-}
-
-*/
 
 Transaction* TransactionLog::FindTransactionByID(int transactionID)
 {

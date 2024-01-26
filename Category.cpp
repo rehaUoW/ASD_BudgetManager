@@ -5,7 +5,7 @@
 
 #include "Category.h"
 
-// Constructor for the Catogary Class 
+// Constructor for the Category Class 
 Category::Category(TransactionType transactionType_, std::string name_)
 {
 	transactionType = transactionType_;

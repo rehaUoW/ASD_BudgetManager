@@ -14,29 +14,35 @@
 class Transaction
 {
 private:
-	int transactionID;
 
-	TransactionType transactionType;
+	/*attributes*/
+	int transactionID; //handled by Transaction Log - used as unique identifier
 
-	tm date;
+	TransactionType transactionType; //primary attribute
 
-	double amount;
+	tm date; //primary attribute
 
-	std::string note;
+	double amount; //primary attribute
 
-	RecurringType recurring;
+	std::string note; //secondary attribute
 
-	tm recurranceEndDate;
+	RecurringType recurring; //used with recurring transactions
 
-	int recurringID;
+	tm recurranceEndDate; //used with recurring transactions
 
-	Category* category;
+	int recurringID; //used with recurring transactions
+
+	Category* category; //primary attribute
 
 public:
+
+	/*constructors*/
 	Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_);
 
 	Transaction(Transaction& t); // copy constructor
 
+
+	/*Setters*/
 	void AddNote(std::string note_);
 
 	void AppendNote(std::string note_);
@@ -55,6 +61,11 @@ public:
 
 	void SetCategory(Category* newCategory);
 
+	void SetRecurringID(int id);
+
+
+
+	/*Getters*/
 	void PrintTransaction();
 
 	int GetTransactionID();
@@ -73,11 +84,12 @@ public:
 
 	Category* GetCategory();
 
+
+
+	/*Predicates*/
 	bool IsTransactionOlderThan(Transaction& anotherTransaction); //predicate for use in TransactionLog when adding Transactions to the list chronologically
 
-	bool IsTransactionOlderThan(tm& time);
-
-	void SetRecurringID(int id);
+	bool IsTransactionOlderThan(tm& time); //predicate	
 
 };
 #endif

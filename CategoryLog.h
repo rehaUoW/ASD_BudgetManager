@@ -8,7 +8,6 @@
 
 
 // Singleton class for the log of categories (contains a std::list of pointers to objects of the Category class)
-
 class CategoryLog
 {
 private:

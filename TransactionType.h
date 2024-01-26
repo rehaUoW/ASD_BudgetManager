@@ -4,6 +4,8 @@
 enum TransactionType { income, expense }; 
 
 #endif
+
+// switch-case template for common use:
 /*
 switch (transactionType)
 {

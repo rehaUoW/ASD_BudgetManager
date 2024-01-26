@@ -3,6 +3,7 @@
 
 #include "CategoryLog.h"
 
+//initialize static members
 CategoryLog* CategoryLog::instance = nullptr;
 int CategoryLog::numberOfCategories = 0;
 
@@ -39,19 +40,7 @@ void CategoryLog::DeleteCategory(Category* category)
     numberOfCategories--;
 }
 
-// impletementation of the constrcutor 
-/*
-CategoryLog::CategoryLog(const CategoryLog& other)
-{
-    numberOfCategories = other.numberOfCategories;
 
-    for (const auto& category : other.categoryList)
-    {
-        Category* newCategory = new Category(*category);
-        categoryList.push_back(newCategory);
-    }
-}
-*/
 // Destructor implementation
 CategoryLog::~CategoryLog()
 {

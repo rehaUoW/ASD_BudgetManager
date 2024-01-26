@@ -5,6 +5,7 @@ enum RecurringType { none, annual, monthly, weekly, daily };
 
 #endif
 
+// switch-case template for common use:
 /*
 switch (recurring)
 {

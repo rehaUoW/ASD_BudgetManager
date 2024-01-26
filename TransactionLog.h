@@ -25,12 +25,13 @@ private:
 	static int recurringIDCounter;
 
 private:
+	/*Constructors*/
 	TransactionLog();
 
 	TransactionLog(TransactionLog& transactionLog);
 
 public:
-	static TransactionLog* GetTransactionLog();
+	static TransactionLog* GetTransactionLog(); //Singleton accessor
 
 	std::list<Transaction*> GetListOfTransactions();
 
@@ -38,19 +39,15 @@ public:
 
 	void AddTransaction(Transaction& newTransaction);
 
-	void AddRecurringTransactions(Transaction& newTransaction, tm EndDate);
+	void AddRecurringTransactions(Transaction& newTransaction, tm endDate);
 
 	void DeleteTransaction(Transaction* transaction);
 
-	std::list<Transaction*> RetrieveTransactions(int start, int end);
-/*
-	Transaction** RetrieveTransactions(int start, int end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
-	//usage: arguments 1 & 5 means the first thru fifth item in the list (inclusive) will be returned
-*/
-	std::list<Transaction*> RetrieveTransactions(tm start, tm end);
-	//Transaction** RetrieveTransactions(tm start, tm end); //returns pointer to an array. MUST DELETE ARRAY AFTER USE
+	std::list<Transaction*> RetrieveTransactions(int start, int end); //retrieve certain interval of transactions
 
-	Transaction* FindTransactionByID(int transactionID); //Vishwa 
+	std::list<Transaction*> RetrieveTransactions(tm start, tm end); //retrieve certain interval of transactions
+
+	Transaction* FindTransactionByID(int transactionID); 
 };
 
 #endif
