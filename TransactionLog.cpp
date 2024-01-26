@@ -8,6 +8,7 @@
 TransactionLog* TransactionLog::instance = 0;
 int TransactionLog::numberOfTransactions = 0;
 int TransactionLog::IDCounter = 1;
+int TransactionLog::recurringIDCounter = 1;
 
 TransactionLog::TransactionLog()
 {
@@ -48,6 +49,57 @@ void TransactionLog::AddTransaction(Transaction& newTransaction)
 	}
 	transactionList.insert(iter,&newTransaction);
 	numberOfTransactions++;
+}
+
+void TransactionLog::AddRecurringTransactions(Transaction& newTransaction, tm EndDate){
+	RecurringType rf = newTransaction.GetRecurring();
+	newTransaction.SetRecurringID(recurringIDCounter);
+	recurringIDCounter++;
+	tm currentDate = newTransaction.GetDate();
+	time_t currentDateS = std::mktime(&currentDate);
+	time_t endDateS = std::mktime(&EndDate);
+	switch (rf)
+	{
+	case 1:
+		while(currentDateS < endDateS){
+			Transaction* recurTransaction = new Transaction(newTransaction);
+			currentDate.tm_year = currentDate.tm_year + 1;
+			currentDateS = std::mktime(&currentDate);
+			recurTransaction->SetDate(currentDate);
+			AddTransaction(*recurTransaction);
+		}
+		break;
+	case 2:
+		while(currentDateS < endDateS){
+			Transaction* recurTransaction = new Transaction(newTransaction);
+			currentDate.tm_mon = currentDate.tm_mon + 1;
+			currentDateS = std::mktime(&currentDate);
+			recurTransaction->SetDate(currentDate);
+			AddTransaction(*recurTransaction);
+		}
+		break;	
+	case 3:
+		while(currentDateS < endDateS){
+			Transaction* recurTransaction = new Transaction(newTransaction);
+			currentDate.tm_yday = currentDate.tm_yday + 7;
+			currentDateS = std::mktime(&currentDate);
+			recurTransaction->SetDate(currentDate);
+			AddTransaction(*recurTransaction);
+		}
+		break;	
+	case 4:
+		std::cout << "daily ";
+		while(currentDateS < endDateS){
+			Transaction* recurTransaction = new Transaction(newTransaction);
+			currentDate.tm_yday = currentDate.tm_yday + 1;
+			currentDateS = std::mktime(&currentDate);
+			recurTransaction->SetDate(currentDate);
+			AddTransaction(*recurTransaction);
+		}
+		break;	
+	default:
+		break;
+	}
 }
 
 void TransactionLog::DeleteTransaction(Transaction* transaction)

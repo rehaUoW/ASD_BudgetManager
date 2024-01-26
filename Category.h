@@ -28,7 +28,6 @@ public:
 
 
 	void SetBudget(double value);
-	TransactionType GetTransactionType();
 
 };
 #endif

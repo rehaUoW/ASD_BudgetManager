@@ -28,10 +28,14 @@ private:
 
 	tm recurranceEndDate;
 
+	int recurringID;
+
 	Category* category;
 
 public:
 	Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_);
+
+	Transaction(Transaction& t); // copy constructor
 
 	void AddNote(std::string note_);
 
@@ -72,6 +76,8 @@ public:
 	bool IsTransactionOlderThan(Transaction& anotherTransaction); //predicate for use in TransactionLog when adding Transactions to the list chronologically
 
 	bool IsTransactionOlderThan(tm& time);
+
+	void SetRecurringID(int id);
 
 };
 #endif

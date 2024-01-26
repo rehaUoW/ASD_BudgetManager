@@ -10,6 +10,7 @@ Category::Category(TransactionType transactionType_, std::string name_)
 {
 	transactionType = transactionType_;
 	name = name_;	
+	budget = 0;
 }
 
 
@@ -29,9 +30,7 @@ double Category::GetBudget()
 	return budget;
 }
 
-TransactionType Category::GetTransactionType() {
-	return transactionType;
-}
+
 
 
 

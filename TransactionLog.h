@@ -22,6 +22,8 @@ private:
 
 	static int IDCounter;
 
+	static int recurringIDCounter;
+
 private:
 	TransactionLog();
 
@@ -35,6 +37,8 @@ public:
 	static int GetNumberOfTransactions();
 
 	void AddTransaction(Transaction& newTransaction);
+
+	void AddRecurringTransactions(Transaction& newTransaction, tm EndDate);
 
 	void DeleteTransaction(Transaction* transaction);
 

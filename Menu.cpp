@@ -1,6 +1,8 @@
-
+#include <iostream>
 
 #include "Menu.h"
+
+using namespace std;
 
 Category* Menu::ChooseCategory(const std::list<Category*>& categories, TransactionType transactionType)
 {
@@ -117,6 +119,51 @@ void Menu::EnterTrasactionWizard()
     cout << endl;
     //PrintAllTransactions(transactionLog);
 
+    cout << "Choose an option to proceed:" << endl;
+    cout << "1. Exit wizard"<< endl;
+    cout << "2. Recur transaction"<< endl;
+    int choice;
+    cin >> choice;
+    switch (choice){
+        case 2:
+            cout << "Choose recurring frequency:" << endl;
+            cout << "1. Annually"<< endl;
+            cout << "2. Monthly"<< endl;
+            cout << "3. Weekly"<< endl;
+            cout << "4. Daily"<< endl;
+            int rf;
+            cin >> rf;
+            switch (rf)
+            {
+            case 1:
+                newTransaction->AddRecurring(RecurringType::annual);
+                break;
+            case 2:
+                newTransaction->AddRecurring(RecurringType::monthly);
+                break;	
+            case 3:
+                newTransaction->AddRecurring(RecurringType::weekly);
+                break;	
+            case 4:
+                newTransaction->AddRecurring(RecurringType::daily);
+                break;	
+            default:
+                break;
+            }
+            if ((rf >= 1) && (rf <=4)){ //if valid recurring frequency has been entered
+                tm rEnd = getUserInputDate("recurring end");
+                newTransaction->AddRecurranceEndDate(rEnd);
+                transactionLog->AddRecurringTransactions(*newTransaction,rEnd);
+                cout << "Recurring transactions added successfully." <<endl;
+            }else{
+                cout << "Invalid entry" <<endl;
+            }
+
+
+            break;
+        default:
+            break;
+    }
 }
 
 void Menu::ViewTransactionsWizard()
@@ -190,7 +237,7 @@ void Menu::ViewTransactionsWizard()
 
 void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType)
 {
-    /*
+    
     // Get the current date
     time_t currentTime = time(nullptr);
     tm* currentDate = localtime(&currentTime);
@@ -213,11 +260,13 @@ void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRange
     {
         startDate = getUserInputDate("start");
         endDate = getUserInputDate("end");
-        // Get start date from the user
+
         /*
+        // Get start date from the user
+        
         std::cout << "Enter the start date (YYYY MM DD HH MM): ";
         std::cin >> startDate.tm_year >> startDate.tm_mon >> startDate.tm_mday >> startDate.tm_hour >> startDate.tm_min;
-
+        
         // Get end date from the user
         std::cout << "Enter the end date (YYYY MM DD HH MM): ";
         std::cin >> endDate.tm_year >> endDate.tm_mon >> endDate.tm_mday >> endDate.tm_hour >> endDate.tm_min;
@@ -381,7 +430,7 @@ void Menu::EditTransaction()
     cout << "Choose a transaction to edit:\n";
 
     // Display transactions
-    //displayTransactionsList(transactionLog->GetListOfTransactions());
+    displayTransactions(transactionLog->GetListOfTransactions());
 
     int transactionID;
     cout << "Enter the transaction ID to edit: ";
@@ -437,8 +486,37 @@ void Menu::EditTransaction()
             transactionToEdit->AppendNote(newNote);
             break;
         case 4:
-            //Transaction Type and/or Category
+            {
+            //Edit Transaction Type and Category
+
+            // Clear the buffer
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Enter the transaction type (0 for income, 1 for expense): ";
+            int userInput;
+            while (!(cin >> userInput) || (userInput != 0 && userInput != 1)) {
+                cin.clear();  // Clear error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discard invalid input
+                cout << "Invalid input. Please enter 0 for income or 1 for expense: ";
+            }
+            
+            TransactionType tt = static_cast<TransactionType>(userInput);
+            transactionToEdit->SetTransactionType(tt);
+
+            // Clear the buffer
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            CategoryLog* categoryLog = CategoryLog::GetCategoryLog();
+            cout << endl;
+            // Display the list of categories or implement a method to choose a category
+            list<Category*> categories__ = categoryLog->GetListOfCategories();
+
+            // Call the ChooseCategory function to get the user's choice
+            Category* chosenCategory = ChooseCategory(categories__, tt);
+            transactionToEdit->SetCategory(chosenCategory);
+            
             break;
+            }
         case 5:
             //Edit date
             tm newDate;
@@ -479,7 +557,7 @@ void Menu::DeleteTransaction()
     cout << "Choose a transaction to delete:\n";
 
     // Display transactions
-    displayTransactionsList(transactionLog->GetListOfTransactions());
+    displayTransactions(transactionLog->GetListOfTransactions());
 
     int transactionID;
     cout << "Enter the transaction ID to delete: ";
@@ -524,12 +602,22 @@ void Menu::ViewCategories()
 
 
     std::cout << "Available Categories:\n";
+    std::cout << std::endl;
     for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
         Category& category = *categoryPtr;
  
         if (categoryPtr) {
             // Using GetName and GetBudget methods to retrieve category information
-            std::cout << "Name: " << categoryPtr->GetName() << ", Transaction Type: " << categoryPtr->GetTransactionType() << ", Budget: " << categoryPtr->GetBudget() << "\n";
+            std::cout << "---------------" << std::endl;
+            if (categoryPtr->GetTransactionType() == 0){
+                std::cout << "Type: Income" << std::endl;
+            }else{
+                std::cout << "Type: Expense" << std::endl;
+            }
+            std::cout << "Name: " << categoryPtr->GetName() << std::endl;
+            std::cout <<"Budget: " << categoryPtr->GetBudget() << std::endl;
+            std::cout << "---------------" << std::endl;
+            std::cout <<  std::endl;
         }
         else {
             std::cout << "Invalid category detected.\n";
@@ -544,9 +632,12 @@ void Menu::AddNewCategory() {
     int typeInput;
     TransactionType type;
 
-    std::cout << "Enter the name of the new category: ";
-    std::cin >> name;
+    // Clear the newline character left in the buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+    std::cout << "Enter the name of the new category: "<<std::endl;
+    std::getline(std::cin,name);
+    std::cout << std::endl;
 
     cout << "Select the transaction type (0 for EXPENSE, 1 for INCOME, ...): ";
     cin >> typeInput;
@@ -590,7 +681,7 @@ void Menu::EnterBudgetWizard()
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the incorrect input
         }
         category.SetBudget(budget);
-        std::cout << "Budget set for " << category.GetName() << ": LKR" << budget << std::endl;
+        std::cout << "Budget set for " << category.GetName() << ": LKR " << budget << std::endl;
     }
     
 
@@ -600,7 +691,7 @@ void Menu::PrintBudgetStatus()
 {
     for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
         Category& category = *categoryPtr;
-        std::cout << "Budget set for " << category.GetName() << ": LKR" << category.GetBudget() << std::endl;
+        std::cout << "Budget set for " << category.GetName() << ": LKR " << category.GetBudget() << std::endl;
     }
 
 }

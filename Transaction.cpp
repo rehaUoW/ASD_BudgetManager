@@ -6,6 +6,7 @@
 Transaction::Transaction(TransactionType transactionType_, tm date_, double amount_, Category* category_)
 {
 	transactionID = 0; //just to initialize
+	recurringID = 0; //only used if transaction is recurring
 	transactionType = transactionType_;
 	date = date_;
 	amount = amount_;
@@ -13,6 +14,18 @@ Transaction::Transaction(TransactionType transactionType_, tm date_, double amou
 	recurring = RecurringType::none;
 	category = category_;
 }
+
+Transaction::Transaction(Transaction& t){
+	transactionID = t.transactionID;
+	recurringID = t.recurringID;
+	transactionType = t.transactionType;
+	date = t.date;
+	amount = t.amount;
+	note = t.note;
+	recurring = t.recurring;
+	recurranceEndDate = t.recurranceEndDate;
+	category = t.category;
+} // copy constructor
 
 void Transaction::AddNote(std::string note_)
 {
@@ -61,6 +74,7 @@ void Transaction::SetCategory(Category* newCategory)
 
 void Transaction::PrintTransaction()
 {
+	std::cout<<"Transaction ID: " << transactionID << std::endl;;
 	CommonFunctions::PrintDateTime(date);
 	std::cout << std::endl;
 	std::cout<<"Transaction Type: ";
@@ -75,6 +89,9 @@ void Transaction::PrintTransaction()
 	default:
 		break;
 	}
+	std::cout << std::endl;
+	std::cout<<"Category: ";
+	std::cout<< category->GetName();
 	std::cout << std::endl;
 	std::cout<<"Amount: " << amount << std::endl;
 	if (note != "")
@@ -153,4 +170,8 @@ bool Transaction::IsTransactionOlderThan(Transaction& anotherTransaction){
 
 bool Transaction::IsTransactionOlderThan(tm& time){
     return mktime(&date) < mktime(&time);
+}
+
+void Transaction::SetRecurringID(int id){
+	recurringID = id;
 }
