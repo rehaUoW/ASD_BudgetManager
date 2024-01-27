@@ -438,27 +438,61 @@ void Menu::AddNewCategory() {
 void Menu::EnterBudgetWizard()
 {
     
-    for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
-        Category& category = *categoryPtr;
-        double budget;
-        std::cout << "Enter the budget for " << category.GetName() << ": ";
-        while (!(std::cin >> budget)) {
-            std::cout << "Invalid input. Please enter a number for " << category.GetName() << ": ";
-            std::cin.clear(); // clear the error state
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the incorrect input
-        }
-        category.SetBudget(budget);
-        std::cout << "Budget set for " << category.GetName() << ": LKR " << budget << std::endl;
-    }
-    
+    // Clear the newline character left in the buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string name = "";
+    std::cout << "Enter the name of expense category you wish to budget: "<<std::endl;
+    std::getline(std::cin,name,'\n');
 
+    CategoryLog* categoryLog = CategoryLog::GetCategoryLog();
+    std::list<Category*> categoryList = categoryLog->GetListOfCategories();
+    bool success = false;
+
+    for (Category* cat : categoryList){
+        if ( (name == cat->GetName()) && (cat->GetTransactionType() == 1) ) {
+            success = true;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            double target = 0;
+            std::cout << "Enter target budget: "<<std::endl;
+            cin >> target;
+            cat->SetBudget(target);
+            cout << "Budget Updated!" << endl;
+        }
+    }
+    if (!success) {
+        cout << "No such expense category found!" << endl;
+    }
 }
 
 void Menu::PrintBudgetStatus()
 {
-    for (Category* categoryPtr : CategoryLog::GetCategoryLog()->GetListOfCategories()) {
-        Category& category = *categoryPtr;
-        std::cout << "Budget set for " << category.GetName() << ": LKR " << category.GetBudget() << std::endl;
+    TransactionLog* transactionLog = TransactionLog::GetTransactionLog();
+    //loop thru each expense category
+    CategoryLog* categoryLog = CategoryLog::GetCategoryLog();
+    std::list<Category*> categoryList = categoryLog->GetListOfCategories();
+    for (Category* category : categoryList){
+        TransactionType transactionType = category->GetTransactionType();
+        if (transactionType == 0){
+            continue; //ignore if category is of income type
+        }
+        double total = 0;
+        std::list<Transaction*> transactionsOfTheMonth = GetTransactionsByDateRange(transactionLog,DateRangeType::CurrentMonth);
+        for (Transaction* t : transactionsOfTheMonth){
+            Category* categoryOfT = t->GetCategory();
+            if (categoryOfT == category){
+                total += t->GetAmount();
+            }
+        }
+        cout << "Category: " << category->GetName() << endl;
+        cout << "Budget: " << category->GetBudget() << endl;
+        cout << "Current Expenditure: " << total << endl;
+        if (total <= category->GetBudget()){
+            cout << "On Budget!" << endl;
+        }else{
+            cout << "Over Budget!" << endl;
+        }
+        cout << "-----------------" << endl;
+        cout << endl;
     }
 
 }
@@ -501,6 +535,41 @@ void Menu::viewTransactionsByDateRange(TransactionLog* transactionLog, DateRange
     // Retrieve and display transactions within the custom date range
     std::list<Transaction*> transactions = transactionLog->RetrieveTransactions(startDate, endDate);
     displayTransactions(transactions);
+    //delete[] transactions; // Note: This is not needed if you are using std::list or smart pointers for memory management
+}
+
+std::list<Transaction*> Menu::GetTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType)
+{
+    
+    // Get the current date
+    time_t currentTime = time(nullptr);
+    tm* currentDate = localtime(&currentTime);
+
+    tm startDate;
+    tm endDate;
+
+    // Set the appropriate start and end dates based on the selected rangeType
+    if (rangeType == DateRangeType::LastMonth)
+    {
+        startDate = calculateLastMonthStartDate(*currentDate);
+        endDate = calculateLastMonthEndDate(*currentDate);
+    }
+    else if (rangeType == DateRangeType::CurrentMonth)
+    {
+        startDate = calculateCurrentMonthStartDate(*currentDate);
+        endDate = *currentDate;
+    }
+    else if (rangeType == DateRangeType::Custom)
+    {
+        startDate = getUserInputDate("start");
+        endDate = getUserInputDate("end");
+    }
+
+    
+
+    // Retrieve and display transactions within the custom date range
+    std::list<Transaction*> transactions = transactionLog->RetrieveTransactions(startDate, endDate);
+    return transactions;
     //delete[] transactions; // Note: This is not needed if you are using std::list or smart pointers for memory management
 }
 

@@ -59,6 +59,8 @@ public:
 
 	void viewTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType);
 
+	std::list<Transaction*> GetTransactionsByDateRange(TransactionLog* transactionLog, DateRangeType rangeType);
+
     void displayTransactions(const list<Transaction*>& transactions);	
 
 	Category* ChooseCategory(const list<Category*>& categories, TransactionType transactionType);
